@@ -10,7 +10,7 @@ It reads your existing Codex Desktop login from `~/.codex/auth.json`, checks the
 
 The easiest path is the prebuilt zip from GitHub Releases.
 
-1. Download `Codex Limit Widget.zip` from the latest release.
+1. Download `Codex-Limit-Widget.zip` from the latest release.
 2. Unzip it.
 3. Move `Codex Limit Widget.app` into `/Applications`.
 4. Open the app once.
