@@ -51,15 +51,14 @@ struct LimitWidgetView: View {
     private var small: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                widgetLogo(size: 28, cornerRadius: 7)
+                Text("Codex")
+                    .font(.headline)
                 Spacer()
                 Text("\(entry.snapshot.availableResetCount)R")
                     .font(.headline)
                     .monospacedDigit()
             }
 
-            Text("Codex")
-                .font(.headline)
             Text(entry.snapshot.statusTitle)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -78,7 +77,6 @@ struct LimitWidgetView: View {
     private var medium: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                widgetLogo(size: 34, cornerRadius: 8)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Codex Limit Widget")
                         .font(.headline)
@@ -108,7 +106,6 @@ struct LimitWidgetView: View {
     private var large: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 10) {
-                widgetLogo(size: 40, cornerRadius: 9)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Codex Limit Widget")
                         .font(.headline)
@@ -144,18 +141,6 @@ struct LimitWidgetView: View {
             }
         }
         .padding()
-    }
-
-    private func widgetLogo(size: CGFloat, cornerRadius: CGFloat) -> some View {
-        Image("AppLogo")
-            .resizable()
-            .scaledToFill()
-            .frame(width: size, height: size)
-            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(.secondary.opacity(0.28))
-            }
     }
 
     private func widgetMeter(title: String, window: LimitWindowSnapshot?) -> some View {
