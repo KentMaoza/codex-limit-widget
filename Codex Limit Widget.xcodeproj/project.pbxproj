@@ -1,0 +1,613 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C00000000000000000000001 /* CodexLimitWidgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* CodexLimitWidgetApp.swift */; };
+		C00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* ContentView.swift */; };
+		C00000000000000000000003 /* MenuBarStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000003 /* MenuBarStatusView.swift */; };
+		C0000000000000000000000D /* LimitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000D /* LimitWidget.swift */; };
+		C00000000000000000000017 /* LimitWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A0000000000000000000001C /* LimitWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C00000000000000000000018 /* CodexLimitCore.framework in App Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* CodexLimitCore.framework */; };
+		C00000000000000000000019 /* CodexLimitCore.framework in Widget Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* CodexLimitCore.framework */; };
+		C0000000000000000000001A /* CodexLimitCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* CodexLimitCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C0000000000000000000001B /* Base64URL.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000004 /* Base64URL.swift */; };
+		C0000000000000000000001C /* CodexAuth.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000005 /* CodexAuth.swift */; };
+		C0000000000000000000001D /* CodexLimitClient.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000006 /* CodexLimitClient.swift */; };
+		C0000000000000000000001E /* CodexLimitService.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000007 /* CodexLimitService.swift */; };
+		C0000000000000000000001F /* CodexLimitSnapshotStore.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000008 /* CodexLimitSnapshotStore.swift */; };
+		C00000000000000000000020 /* DateFormatting.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000009 /* DateFormatting.swift */; };
+		C00000000000000000000021 /* LimitModels.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000A /* LimitModels.swift */; };
+		C00000000000000000000022 /* LimitSnapshotBuilder.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000B /* LimitSnapshotBuilder.swift */; };
+		C00000000000000000000023 /* RefreshPolicy.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000C /* RefreshPolicy.swift */; };
+		C00000000000000000000024 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000012 /* AppIcon.icns */; };
+		C00000000000000000000025 /* AppLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000013 /* AppLogo.png */; };
+		C00000000000000000000026 /* AppIcon.icns in Widget Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000012 /* AppIcon.icns */; };
+		C00000000000000000000027 /* AppLogo.png in Widget Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000013 /* AppLogo.png */; };
+		C00000000000000000000028 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* Assets.xcassets */; };
+		C00000000000000000000029 /* Assets.xcassets in Widget Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A0000000000000000000001E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000013;
+			remoteInfo = LimitWidget;
+		};
+		A00000000000000000000029 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000020;
+			remoteInfo = CodexLimitCore;
+		};
+		A0000000000000000000002B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000020;
+			remoteInfo = CodexLimitCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A00000000000000000000017 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C00000000000000000000017 /* LimitWidget.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0000000000000000000002C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C0000000000000000000001A /* CodexLimitCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A0000000000000000000001B /* Codex Limit Widget.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Codex Limit Widget.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0000000000000000000001C /* LimitWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LimitWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000027 /* CodexLimitCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CodexLimitCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B00000000000000000000001 /* CodexLimitWidgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitWidgetApp.swift; sourceTree = "<group>"; };
+		B00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B00000000000000000000003 /* MenuBarStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStatusView.swift; sourceTree = "<group>"; };
+		B00000000000000000000004 /* Base64URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base64URL.swift; sourceTree = "<group>"; };
+		B00000000000000000000005 /* CodexAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexAuth.swift; sourceTree = "<group>"; };
+		B00000000000000000000006 /* CodexLimitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitClient.swift; sourceTree = "<group>"; };
+		B00000000000000000000007 /* CodexLimitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitService.swift; sourceTree = "<group>"; };
+		B00000000000000000000008 /* CodexLimitSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitSnapshotStore.swift; sourceTree = "<group>"; };
+		B00000000000000000000009 /* DateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatting.swift; sourceTree = "<group>"; };
+		B0000000000000000000000A /* LimitModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitModels.swift; sourceTree = "<group>"; };
+		B0000000000000000000000B /* LimitSnapshotBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitSnapshotBuilder.swift; sourceTree = "<group>"; };
+		B0000000000000000000000C /* RefreshPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshPolicy.swift; sourceTree = "<group>"; };
+		B0000000000000000000000D /* LimitWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitWidget.swift; sourceTree = "<group>"; };
+		B0000000000000000000000E /* AppInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppInfo.plist; sourceTree = "<group>"; };
+		B0000000000000000000000F /* WidgetInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WidgetInfo.plist; sourceTree = "<group>"; };
+		B00000000000000000000010 /* CodexLimitWidgetApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CodexLimitWidgetApp.entitlements; sourceTree = "<group>"; };
+		B00000000000000000000011 /* LimitWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LimitWidgetExtension.entitlements; sourceTree = "<group>"; };
+		B00000000000000000000012 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		B00000000000000000000013 /* AppLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppLogo.png; sourceTree = "<group>"; };
+		B00000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000015 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00000000000000000000018 /* CodexLimitCore.framework in App Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000019 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00000000000000000000019 /* CodexLimitCore.framework in Widget Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000025 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000004 /* Sources */,
+				A00000000000000000000008 /* Config */,
+				A00000000000000000000030 /* Resources */,
+				A00000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000001B /* Codex Limit Widget.app */,
+				A0000000000000000000001C /* LimitWidget.appex */,
+				A00000000000000000000027 /* CodexLimitCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000004 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000005 /* CodexLimitApp */,
+				A00000000000000000000006 /* CodexLimitCore */,
+				A00000000000000000000007 /* LimitWidget */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000005 /* CodexLimitApp */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000001 /* CodexLimitWidgetApp.swift */,
+				B00000000000000000000002 /* ContentView.swift */,
+				B00000000000000000000003 /* MenuBarStatusView.swift */,
+			);
+			path = CodexLimitApp;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000006 /* CodexLimitCore */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000004 /* Base64URL.swift */,
+				B00000000000000000000005 /* CodexAuth.swift */,
+				B00000000000000000000006 /* CodexLimitClient.swift */,
+				B00000000000000000000007 /* CodexLimitService.swift */,
+				B00000000000000000000008 /* CodexLimitSnapshotStore.swift */,
+				B00000000000000000000009 /* DateFormatting.swift */,
+				B0000000000000000000000A /* LimitModels.swift */,
+				B0000000000000000000000B /* LimitSnapshotBuilder.swift */,
+				B0000000000000000000000C /* RefreshPolicy.swift */,
+			);
+			path = CodexLimitCore;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000007 /* LimitWidget */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000000000000000000D /* LimitWidget.swift */,
+			);
+			path = LimitWidget;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000008 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				B0000000000000000000000E /* AppInfo.plist */,
+				B0000000000000000000000F /* WidgetInfo.plist */,
+				B00000000000000000000010 /* CodexLimitWidgetApp.entitlements */,
+				B00000000000000000000011 /* LimitWidgetExtension.entitlements */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000030 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B00000000000000000000012 /* AppIcon.icns */,
+				B00000000000000000000013 /* AppLogo.png */,
+				B00000000000000000000014 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000012 /* Codex Limit Widget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000000000000000000000A /* Build configuration list for PBXNativeTarget "Codex Limit Widget" */;
+			buildPhases = (
+				A00000000000000000000014 /* Sources */,
+				A00000000000000000000015 /* Frameworks */,
+				A00000000000000000000016 /* Resources */,
+				A0000000000000000000002C /* Embed Frameworks */,
+				A00000000000000000000017 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A0000000000000000000001D /* PBXTargetDependency */,
+				A00000000000000000000028 /* PBXTargetDependency */,
+			);
+			name = "Codex Limit Widget";
+			productName = "Codex Limit Widget";
+			productReference = A0000000000000000000001B /* Codex Limit Widget.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000013 /* LimitWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000000000000000000000B /* Build configuration list for PBXNativeTarget "LimitWidget" */;
+			buildPhases = (
+				A00000000000000000000018 /* Sources */,
+				A00000000000000000000019 /* Frameworks */,
+				A0000000000000000000001A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A0000000000000000000002A /* PBXTargetDependency */,
+			);
+			name = LimitWidget;
+			productName = LimitWidget;
+			productReference = A0000000000000000000001C /* LimitWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A00000000000000000000020 /* CodexLimitCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000021 /* Build configuration list for PBXNativeTarget "CodexLimitCore" */;
+			buildPhases = (
+				A00000000000000000000024 /* Sources */,
+				A00000000000000000000025 /* Frameworks */,
+				A00000000000000000000026 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CodexLimitCore;
+			productName = CodexLimitCore;
+			productReference = A00000000000000000000027 /* CodexLimitCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2605;
+				LastUpgradeCheck = 2605;
+				TargetAttributes = {
+					A00000000000000000000012 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+					A00000000000000000000013 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+					A00000000000000000000020 = {
+						CreatedOnToolsVersion = 26.5;
+					};
+				};
+			};
+			buildConfigurationList = A00000000000000000000009 /* Build configuration list for PBXProject "Codex Limit Widget" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00000000000000000000002;
+			productRefGroup = A00000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000020 /* CodexLimitCore */,
+				A00000000000000000000012 /* Codex Limit Widget */,
+				A00000000000000000000013 /* LimitWidget */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000016 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00000000000000000000024 /* AppIcon.icns in Resources */,
+				C00000000000000000000025 /* AppLogo.png in Resources */,
+				C00000000000000000000028 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0000000000000000000001A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00000000000000000000026 /* AppIcon.icns in Widget Resources */,
+				C00000000000000000000027 /* AppLogo.png in Widget Resources */,
+				C00000000000000000000029 /* Assets.xcassets in Widget Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000026 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000014 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00000000000000000000001 /* CodexLimitWidgetApp.swift in Sources */,
+				C00000000000000000000002 /* ContentView.swift in Sources */,
+				C00000000000000000000003 /* MenuBarStatusView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000018 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0000000000000000000000D /* LimitWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000024 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0000000000000000000001B /* Base64URL.swift in Core Sources */,
+				C0000000000000000000001C /* CodexAuth.swift in Core Sources */,
+				C0000000000000000000001D /* CodexLimitClient.swift in Core Sources */,
+				C0000000000000000000001E /* CodexLimitService.swift in Core Sources */,
+				C0000000000000000000001F /* CodexLimitSnapshotStore.swift in Core Sources */,
+				C00000000000000000000020 /* DateFormatting.swift in Core Sources */,
+				C00000000000000000000021 /* LimitModels.swift in Core Sources */,
+				C00000000000000000000022 /* LimitSnapshotBuilder.swift in Core Sources */,
+				C00000000000000000000023 /* RefreshPolicy.swift in Core Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A0000000000000000000001D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000013 /* LimitWidget */;
+			targetProxy = A0000000000000000000001E /* PBXContainerItemProxy */;
+		};
+		A00000000000000000000028 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000020 /* CodexLimitCore */;
+			targetProxy = A00000000000000000000029 /* PBXContainerItemProxy */;
+		};
+		A0000000000000000000002A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000020 /* CodexLimitCore */;
+			targetProxy = A0000000000000000000002B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A0000000000000000000000C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A0000000000000000000000D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A0000000000000000000000E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/AppInfo.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hamlet.CodexLimitWidget;
+				PRODUCT_NAME = "Codex Limit Widget";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A0000000000000000000000F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/CodexLimitWidgetApp.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/AppInfo.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hamlet.CodexLimitWidget;
+				PRODUCT_NAME = "Codex Limit Widget";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A00000000000000000000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+				buildSettings = {
+					APPLICATION_EXTENSION_API_ONLY = YES;
+					ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+					CODE_SIGN_ENTITLEMENTS = Config/DebugWidgetExtension.entitlements;
+					CODE_SIGN_IDENTITY = "-";
+					CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/WidgetInfo.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hamlet.CodexLimitWidget.LimitWidget;
+				PRODUCT_NAME = LimitWidget;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Config/LimitWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Config/WidgetInfo.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hamlet.CodexLimitWidget.LimitWidget;
+				PRODUCT_NAME = LimitWidget;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A00000000000000000000022 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "@rpath";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hamlet.CodexLimitWidget.CodexLimitCore;
+				PRODUCT_NAME = CodexLimitCore;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000023 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "@rpath";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hamlet.CodexLimitWidget.CodexLimitCore;
+				PRODUCT_NAME = CodexLimitCore;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000009 /* Build configuration list for PBXProject "Codex Limit Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000000000000000000000C /* Debug */,
+				A0000000000000000000000D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000000000000000000000A /* Build configuration list for PBXNativeTarget "Codex Limit Widget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000000000000000000000E /* Debug */,
+				A0000000000000000000000F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000000000000000000000B /* Build configuration list for PBXNativeTarget "LimitWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000010 /* Debug */,
+				A00000000000000000000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000021 /* Build configuration list for PBXNativeTarget "CodexLimitCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000022 /* Debug */,
+				A00000000000000000000023 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00000000000000000000001 /* Project object */;
+}

@@ -1,0 +1,10 @@
+.DS_Store
+.build/
+.swiftpm/
+DerivedData/
+dist/
+
+*.xcuserstate
+*.xcscmblueprint
+Codex Limit Widget.xcodeproj/xcuserdata/
+Codex Limit Widget.xcodeproj/project.xcworkspace/xcuserdata/
