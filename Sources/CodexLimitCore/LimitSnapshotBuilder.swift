@@ -5,11 +5,17 @@ public enum LimitSnapshotBuilder {
         usage: CodexUsageResponse?,
         resetCredits: ResetCreditsResponse?,
         now: Date = Date(),
-        errorMessage: String? = nil
+        errorMessage: String? = nil,
+        settings: CodexSettings = CodexSettings()
     ) -> LimitSnapshot {
-        let windows = usage?.rateLimit.map { rateLimit in
-            buildWindows(from: rateLimit)
-        } ?? []
+        var windows = usage?.rateLimit.map { buildWindows(from: $0) } ?? []
+        for (index, additionalLimit) in (usage?.additionalRateLimits ?? []).enumerated() {
+            windows.append(contentsOf: buildWindows(
+                from: additionalLimit.rateLimit,
+                idPrefix: "additional-\(index)",
+                titlePrefix: additionalLimit.limitName
+            ))
+        }
 
         let resetCount = resetCredits?.availableCount
             ?? usage?.rateLimitResetCredits?.availableCount
@@ -19,31 +25,69 @@ public enum LimitSnapshotBuilder {
             generatedAt: now,
             planLabel: planLabel(from: usage?.planType),
             availableResetCount: resetCount,
+            creditBalance: usage?.credits?.balance,
+            activeModel: settings.model,
+            reasoningEffort: settings.reasoningEffort,
             windows: windows,
             errorMessage: errorMessage
         )
     }
 
-    private static func buildWindows(from rateLimit: CodexRateLimit) -> [LimitWindowSnapshot] {
+    private static func buildWindows(
+        from rateLimit: CodexRateLimit,
+        idPrefix: String? = nil,
+        titlePrefix: String? = nil
+    ) -> [LimitWindowSnapshot] {
         var windows: [LimitWindowSnapshot] = []
         if let primary = rateLimit.primaryWindow {
-            windows.append(display(for: primary, fallbackID: "primary"))
+            windows.append(display(
+                for: primary,
+                fallbackID: "primary",
+                idPrefix: idPrefix,
+                titlePrefix: titlePrefix
+            ))
         }
         if let secondary = rateLimit.secondaryWindow {
-            windows.append(display(for: secondary, fallbackID: "secondary"))
+            windows.append(display(
+                for: secondary,
+                fallbackID: "secondary",
+                idPrefix: idPrefix,
+                titlePrefix: titlePrefix
+            ))
         }
         return windows
     }
 
-    private static func display(for window: UsageLimitWindow, fallbackID: String) -> LimitWindowSnapshot {
+    private static func display(
+        for window: UsageLimitWindow,
+        fallbackID: String,
+        idPrefix: String?,
+        titlePrefix: String?
+    ) -> LimitWindowSnapshot {
         let seconds = window.limitWindowSeconds ?? 0
         if fallbackID == "primary" || (14_400...21_600).contains(seconds) {
-            return snapshot(id: "five-hour", kind: .fiveHour, title: "5h limit", window: window)
+            return snapshot(
+                id: prefixed("five-hour", with: idPrefix),
+                kind: .fiveHour,
+                title: titled("5h", fallback: "5h limit", prefix: titlePrefix),
+                window: window
+            )
         }
         if fallbackID == "secondary" || (518_400...864_000).contains(seconds) {
-            return snapshot(id: "weekly", kind: .weekly, title: "Weekly limit", window: window)
+            return snapshot(
+                id: prefixed("weekly", with: idPrefix),
+                kind: .weekly,
+                title: titled("Weekly", fallback: "Weekly limit", prefix: titlePrefix),
+                window: window
+            )
         }
-        return snapshot(id: fallbackID, kind: .generic, title: windowTitle(seconds: seconds), window: window)
+        let fallbackTitle = windowTitle(seconds: seconds)
+        return snapshot(
+            id: prefixed(fallbackID, with: idPrefix),
+            kind: .generic,
+            title: titled(fallbackTitle, fallback: fallbackTitle, prefix: titlePrefix),
+            window: window
+        )
     }
 
     private static func snapshot(
@@ -67,10 +111,21 @@ public enum LimitSnapshotBuilder {
         guard let planType, !planType.isEmpty else {
             return "Codex"
         }
+        if planType.caseInsensitiveCompare("prolite") == .orderedSame {
+            return "Pro Lite"
+        }
         return planType
             .split(separator: "_")
             .map { $0.capitalized }
             .joined(separator: " ")
+    }
+
+    private static func prefixed(_ value: String, with prefix: String?) -> String {
+        prefix.map { "\($0)-\(value)" } ?? value
+    }
+
+    private static func titled(_ value: String, fallback: String, prefix: String?) -> String {
+        prefix.map { "\($0) · \(value)" } ?? fallback
     }
 
     private static func windowTitle(seconds: Int) -> String {

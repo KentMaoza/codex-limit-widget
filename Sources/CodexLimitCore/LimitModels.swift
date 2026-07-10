@@ -3,7 +3,28 @@ import Foundation
 public struct CodexUsageResponse: Decodable, Sendable {
     public let planType: String?
     public let rateLimit: CodexRateLimit?
+    public let additionalRateLimits: [AdditionalRateLimit]?
     public let rateLimitResetCredits: ResetCreditCount?
+    public let credits: UsageCredits?
+}
+
+public struct AdditionalRateLimit: Decodable, Sendable {
+    public let limitName: String
+    public let meteredFeature: String?
+    public let rateLimit: CodexRateLimit
+}
+
+public struct UsageCredits: Decodable, Sendable {
+    public let balance: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case balance
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        balance = try container.decodeFlexibleStringIfPresent(forKey: .balance)
+    }
 }
 
 public struct CodexRateLimit: Decodable, Sendable {
@@ -129,6 +150,9 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
     public let generatedAt: Date
     public let planLabel: String
     public let availableResetCount: Int
+    public let creditBalance: String?
+    public let activeModel: String?
+    public let reasoningEffort: String?
     public let windows: [LimitWindowSnapshot]
     public let errorMessage: String?
 
@@ -136,12 +160,18 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         generatedAt: Date,
         planLabel: String,
         availableResetCount: Int,
+        creditBalance: String? = nil,
+        activeModel: String? = nil,
+        reasoningEffort: String? = nil,
         windows: [LimitWindowSnapshot],
         errorMessage: String?
     ) {
         self.generatedAt = generatedAt
         self.planLabel = planLabel
         self.availableResetCount = availableResetCount
+        self.creditBalance = creditBalance
+        self.activeModel = activeModel
+        self.reasoningEffort = reasoningEffort
         self.windows = windows
         self.errorMessage = errorMessage
     }
@@ -189,6 +219,33 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         generatedAt.timeIntervalSince1970 > 0 ? generatedAt : nil
     }
 
+    public var configurationLine: String? {
+        [activeModel, reasoningEffort]
+            .compactMap { value in
+                guard let value, !value.isEmpty else {
+                    return nil
+                }
+                return value
+            }
+            .joined(separator: " · ")
+            .nilIfEmpty
+    }
+
+    public var balanceValue: String {
+        creditBalance ?? "\(availableResetCount)"
+    }
+
+    public var balanceCaption: String {
+        if creditBalance != nil {
+            return "credit balance"
+        }
+        return availableResetCount == 1 ? "reset banked" : "resets banked"
+    }
+
+    public var compactBalance: String {
+        creditBalance.map { "\($0) cr" } ?? "\(availableResetCount)R"
+    }
+
     public var fiveHourWindow: LimitWindowSnapshot? {
         windows.first { $0.kind == .fiveHour }
     }
@@ -203,7 +260,8 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         }
         let fiveHour = percentText(fiveHourWindow?.remainingPercent)
         let weekly = percentText(weeklyWindow?.remainingPercent)
-        return "5h \(fiveHour) / W \(weekly) / \(availableResetCount)R"
+        let balance = creditBalance.map { "\($0) cr" } ?? "\(availableResetCount)R"
+        return "5h \(fiveHour) / W \(weekly) / \(balance)"
     }
 
     public var statusTitle: String {
@@ -213,14 +271,14 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         if errorMessage != nil, windows.isEmpty {
             return "Check Codex login"
         }
-        if availableResetCount == 0 {
-            return "No banked resets"
-        }
         if let weekly = weeklyWindow?.remainingPercent, weekly <= 20 {
-            return "Reset ready if blocked"
+            return availableResetCount > 0 ? "Reset ready if blocked" : "Weekly limit is low"
         }
         if let fiveHour = fiveHourWindow?.remainingPercent, fiveHour <= 12 {
             return "Short window is low"
+        }
+        if availableResetCount > 0 {
+            return "Reset banked"
         }
         return "Capacity available"
     }
@@ -230,6 +288,12 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
             return "-"
         }
         return "\(value)%"
+    }
+}
+
+private extension String {
+    var nilIfEmpty: String? {
+        isEmpty ? nil : self
     }
 }
 

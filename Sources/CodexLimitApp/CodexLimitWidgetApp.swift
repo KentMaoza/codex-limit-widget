@@ -10,7 +10,7 @@ struct CodexLimitWidgetApp: App {
     var body: some Scene {
         WindowGroup("Codex Limit Widget", id: "main") {
             ContentView(store: store)
-                .frame(minWidth: 560, idealWidth: 680, minHeight: 420, idealHeight: 560)
+                .frame(minWidth: 560, idealWidth: 680, minHeight: 640, idealHeight: 700)
                 .task {
                     store.start()
                 }
@@ -131,6 +131,9 @@ final class LimitStore: ObservableObject {
                 generatedAt: nextSnapshot.generatedAt,
                 planLabel: nextSnapshot.planLabel,
                 availableResetCount: nextSnapshot.availableResetCount,
+                creditBalance: nextSnapshot.creditBalance,
+                activeModel: nextSnapshot.activeModel,
+                reasoningEffort: nextSnapshot.reasoningEffort,
                 windows: nextSnapshot.windows,
                 errorMessage: messages.joined(separator: " ")
             )

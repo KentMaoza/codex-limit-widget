@@ -31,7 +31,9 @@ The app refreshes every minute. WidgetKit may update the visible widget a little
 
 - 5-hour usage remaining
 - Weekly usage remaining
-- Banked reset count
+- Named model-specific usage limits when Codex returns them
+- Flexible-credit balance, with banked resets as a legacy fallback
+- Active model and reasoning effort from `~/.codex/config.toml`
 - Next reset timing
 - Last checked time
 - Local auth, API, and snapshot errors when a check fails
@@ -57,6 +59,13 @@ Build the app and widget:
 
 ```sh
 xcodebuild -project "Codex Limit Widget.xcodeproj" -scheme "Codex Limit Widget" -configuration Debug -derivedDataPath /tmp/codex-limit-widget-derived build
+```
+
+Or use the project run entrypoint, which builds and launches the app:
+
+```sh
+./script/build_and_run.sh
+./script/build_and_run.sh --verify
 ```
 
 The Debug build is intended for local use on your own Mac. Release distribution still needs an Apple signing team, provisioning profiles, and notarization.
