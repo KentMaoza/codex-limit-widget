@@ -31,7 +31,8 @@ public struct CodexLimitService: Sendable {
             usage: usage,
             resetCredits: resetCredits,
             now: now,
-            errorMessage: errorMessage
+            errorMessage: errorMessage,
+            settings: CodexSettings.load()
         )
     }
 }

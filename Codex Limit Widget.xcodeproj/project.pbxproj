@@ -30,6 +30,7 @@
 		C00000000000000000000027 /* AppLogo.png in Widget Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000013 /* AppLogo.png */; };
 		C00000000000000000000028 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* Assets.xcassets */; };
 		C00000000000000000000029 /* Assets.xcassets in Widget Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000014 /* Assets.xcassets */; };
+		C0000000000000000000002A /* CodexSettings.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000015 /* CodexSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 		B00000000000000000000012 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		B00000000000000000000013 /* AppLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppLogo.png; sourceTree = "<group>"; };
 		B00000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B00000000000000000000015 /* CodexSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,7 @@
 				B00000000000000000000005 /* CodexAuth.swift */,
 				B00000000000000000000006 /* CodexLimitClient.swift */,
 				B00000000000000000000007 /* CodexLimitService.swift */,
+				B00000000000000000000015 /* CodexSettings.swift */,
 				B00000000000000000000008 /* CodexLimitSnapshotStore.swift */,
 				B00000000000000000000009 /* DateFormatting.swift */,
 				B0000000000000000000000A /* LimitModels.swift */,
@@ -376,6 +379,7 @@
 				C0000000000000000000001C /* CodexAuth.swift in Core Sources */,
 				C0000000000000000000001D /* CodexLimitClient.swift in Core Sources */,
 				C0000000000000000000001E /* CodexLimitService.swift in Core Sources */,
+				C0000000000000000000002A /* CodexSettings.swift in Core Sources */,
 				C0000000000000000000001F /* CodexLimitSnapshotStore.swift in Core Sources */,
 				C00000000000000000000020 /* DateFormatting.swift in Core Sources */,
 				C00000000000000000000021 /* LimitModels.swift in Core Sources */,

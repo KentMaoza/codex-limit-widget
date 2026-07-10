@@ -54,7 +54,7 @@ struct LimitWidgetView: View {
                 Text("Codex")
                     .font(.headline)
                 Spacer()
-                Text("\(entry.snapshot.availableResetCount)R")
+                Text(entry.snapshot.compactBalance)
                     .font(.headline)
                     .monospacedDigit()
             }
@@ -80,12 +80,18 @@ struct LimitWidgetView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Codex Limit Widget")
                         .font(.headline)
+                    if let configuration = entry.snapshot.configurationLine {
+                        Text(configuration)
+                            .font(.caption2.monospaced())
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
                     Text(CodexLimitDateFormatting.checked(entry.snapshot.checkedAt))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Text("\(entry.snapshot.availableResetCount)R")
+                Text(entry.snapshot.compactBalance)
                     .font(.title2.bold())
                     .monospacedDigit()
             }
@@ -109,12 +115,18 @@ struct LimitWidgetView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Codex Limit Widget")
                         .font(.headline)
+                    if let configuration = entry.snapshot.configurationLine {
+                        Text(configuration)
+                            .font(.caption2.monospaced())
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                    }
                     Text(CodexLimitDateFormatting.checked(entry.snapshot.checkedAt))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Text("\(entry.snapshot.availableResetCount)R")
+                Text(entry.snapshot.compactBalance)
                     .font(.title.bold())
                     .monospacedDigit()
             }
@@ -236,7 +248,7 @@ struct LimitWidget: Widget {
             LimitWidgetView(entry: entry)
         }
         .configurationDisplayName("Codex Limit Widget")
-        .description("Shows Codex 5h, weekly, and reset-bank status.")
+        .description("Shows Codex usage, credits, and the current model configuration.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

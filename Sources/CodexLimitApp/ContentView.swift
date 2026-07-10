@@ -36,18 +36,23 @@ struct ContentView: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text("Codex Limit Widget")
                     .font(.system(size: 25, weight: .bold, design: .rounded))
-                Text("\(store.snapshot.planLabel) reset watcher")
+                Text("\(store.snapshot.planLabel) usage monitor")
                     .font(.callout)
                     .foregroundStyle(.secondary)
+                if let configuration = store.snapshot.configurationLine {
+                    Text(configuration)
+                        .font(.caption.monospaced())
+                        .foregroundStyle(.secondary)
+                }
             }
 
             Spacer()
 
             VStack(alignment: .trailing, spacing: 2) {
-                Text("\(store.snapshot.availableResetCount)")
+                Text(store.snapshot.balanceValue)
                     .font(.system(size: 38, weight: .bold, design: .rounded))
                     .monospacedDigit()
-                Text(store.snapshot.availableResetCount == 1 ? "reset banked" : "resets banked")
+                Text(store.snapshot.balanceCaption)
                     .font(.callout.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
@@ -156,7 +161,10 @@ struct ContentView: View {
         if store.snapshot.availableResetCount > 0 {
             return "The widget opens this reset watcher when clicked."
         }
-        return "No banked reset is available right now. Keep an eye on the usage windows."
+        if store.snapshot.creditBalance != nil {
+            return "Flexible credits extend Codex usage after the included limits are exhausted."
+        }
+        return "Keep an eye on the usage windows."
     }
 
     private func errorBanner(_ message: String) -> some View {
@@ -182,9 +190,10 @@ private struct LimitWindowCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 11) {
-            HStack {
+            HStack(alignment: .top) {
                 Label(window.title, systemImage: iconName)
                     .font(.headline)
+                    .lineLimit(2)
                 Spacer()
                 Text(percentText(window.remainingPercent))
                     .font(.system(size: 25, weight: .bold, design: .rounded))

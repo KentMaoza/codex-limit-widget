@@ -12,6 +12,9 @@ struct MenuBarStatusView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Codex limits")
                         .font(.headline)
+                    Text(store.snapshot.configurationLine ?? store.snapshot.planLabel)
+                        .font(.caption.monospaced())
+                        .foregroundStyle(.secondary)
                     Text(CodexLimitDateFormatting.checked(store.snapshot.checkedAt))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -20,6 +23,10 @@ struct MenuBarStatusView: View {
                 if store.isRefreshing {
                     ProgressView()
                         .controlSize(.small)
+                } else {
+                    Text(store.snapshot.compactBalance)
+                        .font(.headline)
+                        .monospacedDigit()
                 }
             }
 
@@ -28,6 +35,7 @@ struct MenuBarStatusView: View {
                     Image(systemName: window.kind == .weekly ? "calendar" : "clock")
                         .foregroundStyle(.secondary)
                     Text(window.title)
+                        .lineLimit(1)
                     Spacer()
                     Text(remainingText(window.remainingPercent))
                         .fontWeight(.semibold)
@@ -77,7 +85,7 @@ struct MenuBarStatusView: View {
             }
         }
         .padding(14)
-        .frame(width: 330)
+        .frame(width: 360)
     }
 
     private func remainingText(_ value: Int?) -> String {
