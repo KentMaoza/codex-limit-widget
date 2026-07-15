@@ -47,6 +47,7 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
     public let lastAttemptAt: Date?
     public let planLabel: String
     public let availableResetCount: Int
+    let isResetCountAvailable: Bool
     public let creditBalance: String?
     public let activeModel: String?
     public let reasoningEffort: String?
@@ -64,10 +65,37 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         windows: [LimitWindowSnapshot],
         errorMessage: String?
     ) {
+        self.init(
+            generatedAt: generatedAt,
+            lastAttemptAt: lastAttemptAt,
+            planLabel: planLabel,
+            availableResetCount: availableResetCount,
+            isResetCountAvailable: true,
+            creditBalance: creditBalance,
+            activeModel: activeModel,
+            reasoningEffort: reasoningEffort,
+            windows: windows,
+            errorMessage: errorMessage
+        )
+    }
+
+    init(
+        generatedAt: Date,
+        lastAttemptAt: Date? = nil,
+        planLabel: String,
+        availableResetCount: Int,
+        isResetCountAvailable: Bool,
+        creditBalance: String? = nil,
+        activeModel: String? = nil,
+        reasoningEffort: String? = nil,
+        windows: [LimitWindowSnapshot],
+        errorMessage: String?
+    ) {
         self.generatedAt = generatedAt
         self.lastAttemptAt = lastAttemptAt
         self.planLabel = planLabel
         self.availableResetCount = availableResetCount
+        self.isResetCountAvailable = isResetCountAvailable
         self.creditBalance = creditBalance
         self.activeModel = activeModel
         self.reasoningEffort = reasoningEffort
@@ -80,6 +108,7 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         case lastAttemptAt
         case planLabel
         case availableResetCount
+        case isResetCountAvailable
         case creditBalance
         case activeModel
         case reasoningEffort
@@ -93,6 +122,8 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         lastAttemptAt = try container.decodeIfPresent(Date.self, forKey: .lastAttemptAt)
         planLabel = try container.decode(String.self, forKey: .planLabel)
         availableResetCount = try container.decode(Int.self, forKey: .availableResetCount)
+        isResetCountAvailable = try container.decodeIfPresent(Bool.self, forKey: .isResetCountAvailable)
+            ?? (generatedAt.timeIntervalSince1970 > 0)
         creditBalance = try container.decodeIfPresent(String.self, forKey: .creditBalance)
         activeModel = try container.decodeIfPresent(String.self, forKey: .activeModel)
         reasoningEffort = try container.decodeIfPresent(String.self, forKey: .reasoningEffort)
@@ -131,6 +162,7 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         generatedAt: Date(timeIntervalSince1970: 0),
         planLabel: "Codex",
         availableResetCount: 0,
+        isResetCountAvailable: false,
         windows: [],
         errorMessage: nil
     )

@@ -58,7 +58,7 @@ public extension LimitSnapshot {
         if let creditBalance {
             return creditBalance
         }
-        return availableResetCount > 0 ? "\(availableResetCount)" : "—"
+        return isResetCountAvailable ? "\(availableResetCount)" : "—"
     }
 
     var balanceCaption: String {
@@ -72,7 +72,7 @@ public extension LimitSnapshot {
         if let creditBalance {
             return "\(creditBalance) cr"
         }
-        return availableResetCount > 0 ? "\(availableResetCount)R" : "—"
+        return isResetCountAvailable ? "\(availableResetCount)R" : "—"
     }
 
     var fiveHourWindow: LimitWindowSnapshot? {

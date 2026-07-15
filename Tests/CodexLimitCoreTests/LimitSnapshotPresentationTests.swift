@@ -37,14 +37,26 @@ final class LimitSnapshotPresentationTests: XCTestCase {
         XCTAssertEqual(normal.statusLevel, .normal)
     }
 
-    func testUnknownBalanceAndPercentagesUseEmDash() {
-        let unknown = snapshot(windowCount: 2, remaining: [nil, nil])
+    func testKnownZeroAndUnavailableBalanceUseDistinctPresentation() throws {
+        let knownZero = snapshot(windowCount: 2, remaining: [nil, nil])
+        let unavailable = try JSONDecoder().decode(LimitSnapshot.self, from: Data("""
+        {
+          "generatedAt": 100,
+          "planLabel": "Codex",
+          "availableResetCount": 0,
+          "isResetCountAvailable": false,
+          "windows": [],
+          "errorMessage": null
+        }
+        """.utf8))
 
-        XCTAssertEqual(unknown.balanceValue, "—")
-        XCTAssertEqual(unknown.compactBalance, "—")
-        XCTAssertEqual(unknown.summaryLine, "5h — / W — / —")
-        XCTAssertFalse(unknown.summaryLine.contains("-"))
-        XCTAssertFalse(unknown.summaryLine.contains("0"))
+        XCTAssertEqual(knownZero.balanceValue, "0")
+        XCTAssertEqual(knownZero.compactBalance, "0R")
+        XCTAssertEqual(knownZero.summaryLine, "5h — / W — / 0R")
+        XCTAssertEqual(unavailable.balanceValue, "—")
+        XCTAssertEqual(unavailable.compactBalance, "—")
+        XCTAssertFalse(knownZero.summaryLine.contains("-"))
+        XCTAssertFalse(unavailable.compactBalance.contains("0"))
     }
 
     func testBaseWindowAccessorsRemainExactWithNamedWindows() {

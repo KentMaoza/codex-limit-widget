@@ -32,4 +32,61 @@ final class LimitSnapshotStateTests: XCTestCase {
 
         XCTAssertEqual(decoded, snapshot)
     }
+
+    func testResetCountAvailabilityRoundTripsAndLegacyDefaults() throws {
+        let knownZero = LimitSnapshot(
+            generatedAt: Date(timeIntervalSince1970: 1_800_000_000),
+            planLabel: "Codex",
+            availableResetCount: 0,
+            windows: [],
+            errorMessage: nil
+        )
+        let unavailable = try decode("""
+        {
+          "generatedAt": 100,
+          "planLabel": "Codex",
+          "availableResetCount": 0,
+          "isResetCountAvailable": false,
+          "windows": [],
+          "errorMessage": null
+        }
+        """)
+        let legacySuccessfulZero = try decode("""
+        {
+          "generatedAt": 100,
+          "planLabel": "Codex",
+          "availableResetCount": 0,
+          "windows": [],
+          "errorMessage": null
+        }
+        """)
+        let legacyNotChecked = try decode("""
+        {
+          "generatedAt": -978307200,
+          "planLabel": "Codex",
+          "availableResetCount": 0,
+          "windows": [],
+          "errorMessage": null
+        }
+        """)
+
+        XCTAssertEqual(try encodedObject(knownZero)["isResetCountAvailable"] as? Bool, true)
+        XCTAssertEqual(try encodedObject(unavailable)["isResetCountAvailable"] as? Bool, false)
+        XCTAssertEqual(try roundTrip(knownZero).balanceValue, "0")
+        XCTAssertEqual(try roundTrip(unavailable).balanceValue, "—")
+        XCTAssertEqual(legacySuccessfulZero.balanceValue, "0")
+        XCTAssertEqual(legacyNotChecked.balanceValue, "—")
+    }
+
+    private func decode(_ json: String) throws -> LimitSnapshot {
+        try JSONDecoder().decode(LimitSnapshot.self, from: Data(json.utf8))
+    }
+
+    private func encodedObject(_ snapshot: LimitSnapshot) throws -> [String: Any] {
+        try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(snapshot)) as? [String: Any])
+    }
+
+    private func roundTrip(_ snapshot: LimitSnapshot) throws -> LimitSnapshot {
+        try JSONDecoder().decode(LimitSnapshot.self, from: JSONEncoder().encode(snapshot))
+    }
 }

@@ -82,6 +82,7 @@ public struct CodexLimitService: Sendable {
             lastAttemptAt: lastAttemptAt,
             planLabel: source.planLabel,
             availableResetCount: source.availableResetCount,
+            isResetCountAvailable: source.isResetCountAvailable,
             creditBalance: source.creditBalance,
             activeModel: source.activeModel,
             reasoningEffort: source.reasoningEffort,

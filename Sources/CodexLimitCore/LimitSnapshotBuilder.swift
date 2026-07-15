@@ -19,13 +19,13 @@ public enum LimitSnapshotBuilder {
 
         let resetCount = resetCredits?.availableCount
             ?? usage?.rateLimitResetCredits?.availableCount
-            ?? 0
 
         return LimitSnapshot(
             generatedAt: now,
             lastAttemptAt: now,
             planLabel: planLabel(from: usage?.planType),
-            availableResetCount: resetCount,
+            availableResetCount: resetCount ?? 0,
+            isResetCountAvailable: resetCount != nil,
             creditBalance: usage?.credits?.balance,
             activeModel: settings.model,
             reasoningEffort: settings.reasoningEffort,

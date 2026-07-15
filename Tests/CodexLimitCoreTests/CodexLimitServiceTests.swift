@@ -116,6 +116,7 @@ final class CodexLimitServiceTests: XCTestCase {
         XCTAssertEqual(result.snapshot.planLabel, LimitSnapshot.notChecked.planLabel)
         XCTAssertTrue(result.snapshot.windows.isEmpty)
         XCTAssertNotNil(result.snapshot.errorMessage)
+        XCTAssertEqual(result.snapshot.balanceValue, "—")
     }
 
     func testResetFailureWithoutUsageCreditFallbackKeepsWindowsAndPartialError() async throws {
@@ -133,6 +134,52 @@ final class CodexLimitServiceTests: XCTestCase {
         XCTAssertEqual(result.snapshot.generatedAt, now)
         XCTAssertEqual(result.snapshot.fiveHourWindow?.remainingPercent, 72)
         XCTAssertEqual(result.snapshot.errorMessage, "The Codex endpoint returned HTTP 500.")
+        XCTAssertEqual(result.snapshot.balanceValue, "—")
+    }
+
+    func testTotalFailurePreservesUnavailableResetState() async throws {
+        let fixture = try makeFixture()
+        ServiceURLProtocol.install { request in
+            try Self.response(for: request, statusCode: 500)
+        }
+        let previous = LimitSnapshot(
+            generatedAt: Date(timeIntervalSince1970: 1_800_000_000),
+            planLabel: "Previous Plan",
+            availableResetCount: 0,
+            isResetCountAvailable: false,
+            windows: [],
+            errorMessage: nil
+        )
+
+        let result = try await makeService(home: fixture).refresh(previous: previous, now: Date())
+
+        XCTAssertEqual(result.snapshot.balanceValue, "—")
+        XCTAssertTrue(result.snapshot.isStale)
+    }
+
+    func testSuccessfulResetEndpointRecoversUnavailableCountToKnownZero() async throws {
+        let fixture = try makeFixture()
+        ServiceURLProtocol.install { request in
+            if request.url?.path.hasSuffix("/usage") == true {
+                return try Self.usageResponse(for: request, includesResetCount: false, includesBalance: false)
+            }
+            return try Self.response(for: request, body: #"{"available_count":0,"credits":[]}"#)
+        }
+        let previous = LimitSnapshot(
+            generatedAt: Date(timeIntervalSince1970: 1_800_000_000),
+            planLabel: "Previous Plan",
+            availableResetCount: 0,
+            isResetCountAvailable: false,
+            windows: [],
+            errorMessage: "Old failure"
+        )
+
+        let result = try await makeService(home: fixture).refresh(previous: previous, now: Date())
+
+        XCTAssertEqual(result.snapshot.balanceValue, "0")
+        XCTAssertEqual(result.snapshot.compactBalance, "0R")
+        XCTAssertNil(result.snapshot.errorMessage)
+        XCTAssertFalse(result.snapshot.isStale)
     }
 
     func testUsageResetCountSuppressesResetFailure() async throws {

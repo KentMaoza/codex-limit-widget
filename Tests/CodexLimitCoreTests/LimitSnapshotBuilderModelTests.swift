@@ -150,6 +150,23 @@ final class LimitSnapshotBuilderModelTests: XCTestCase {
         XCTAssertEqual(snapshot.compactBalance, "2R")
     }
 
+    func testMissingResetCountIsUnavailableAndKnownZeroRemainsZero() throws {
+        let usageWithoutResetCount = try usage(from: #"{"rate_limit":{"primary_window":{"used_percent":10}}}"#)
+        let usageWithZeroFallback = try usage(from: #"{"rate_limit_reset_credits":{"available_count":0}}"#)
+        let zeroResetCredits = try decode(ResetCreditsResponse.self, from: #"{"available_count":0,"credits":[]}"#)
+
+        let unavailable = LimitSnapshotBuilder.make(usage: usageWithoutResetCount, resetCredits: nil)
+        let knownFromUsage = LimitSnapshotBuilder.make(usage: usageWithZeroFallback, resetCredits: nil)
+        let knownFromResetEndpoint = LimitSnapshotBuilder.make(
+            usage: usageWithoutResetCount,
+            resetCredits: zeroResetCredits
+        )
+
+        XCTAssertEqual(unavailable.balanceValue, "—")
+        XCTAssertEqual(knownFromUsage.balanceValue, "0")
+        XCTAssertEqual(knownFromResetEndpoint.balanceValue, "0")
+    }
+
     func testSoleBasePrimarySevenDayWindowIsWeekly() throws {
         let snapshot = LimitSnapshotBuilder.make(
             usage: try usage(from: """
