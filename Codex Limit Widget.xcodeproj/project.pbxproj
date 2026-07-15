@@ -21,7 +21,9 @@
 		C0000000000000000000001E /* CodexLimitService.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000007 /* CodexLimitService.swift */; };
 		C0000000000000000000001F /* CodexLimitSnapshotStore.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000008 /* CodexLimitSnapshotStore.swift */; };
 		C00000000000000000000020 /* DateFormatting.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000009 /* DateFormatting.swift */; };
-		C00000000000000000000021 /* LimitModels.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000A /* LimitModels.swift */; };
+		C0000000000000000000002B /* LimitSnapshot.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000016 /* LimitSnapshot.swift */; };
+		C0000000000000000000002C /* LimitSnapshotPresentation.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000017 /* LimitSnapshotPresentation.swift */; };
+		C0000000000000000000002D /* LimitWireModels.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000018 /* LimitWireModels.swift */; };
 		C00000000000000000000022 /* LimitSnapshotBuilder.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000B /* LimitSnapshotBuilder.swift */; };
 		C00000000000000000000023 /* RefreshPolicy.swift in Core Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000C /* RefreshPolicy.swift */; };
 		C00000000000000000000024 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000012 /* AppIcon.icns */; };
@@ -95,7 +97,6 @@
 		B00000000000000000000007 /* CodexLimitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitService.swift; sourceTree = "<group>"; };
 		B00000000000000000000008 /* CodexLimitSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitSnapshotStore.swift; sourceTree = "<group>"; };
 		B00000000000000000000009 /* DateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatting.swift; sourceTree = "<group>"; };
-		B0000000000000000000000A /* LimitModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitModels.swift; sourceTree = "<group>"; };
 		B0000000000000000000000B /* LimitSnapshotBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitSnapshotBuilder.swift; sourceTree = "<group>"; };
 		B0000000000000000000000C /* RefreshPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshPolicy.swift; sourceTree = "<group>"; };
 		B0000000000000000000000D /* LimitWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitWidget.swift; sourceTree = "<group>"; };
@@ -107,6 +108,9 @@
 		B00000000000000000000013 /* AppLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppLogo.png; sourceTree = "<group>"; };
 		B00000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B00000000000000000000015 /* CodexSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexSettings.swift; sourceTree = "<group>"; };
+		B00000000000000000000016 /* LimitSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitSnapshot.swift; sourceTree = "<group>"; };
+		B00000000000000000000017 /* LimitSnapshotPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitSnapshotPresentation.swift; sourceTree = "<group>"; };
+		B00000000000000000000018 /* LimitWireModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitWireModels.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,8 +190,10 @@
 				B00000000000000000000015 /* CodexSettings.swift */,
 				B00000000000000000000008 /* CodexLimitSnapshotStore.swift */,
 				B00000000000000000000009 /* DateFormatting.swift */,
-				B0000000000000000000000A /* LimitModels.swift */,
+				B00000000000000000000016 /* LimitSnapshot.swift */,
+				B00000000000000000000017 /* LimitSnapshotPresentation.swift */,
 				B0000000000000000000000B /* LimitSnapshotBuilder.swift */,
+				B00000000000000000000018 /* LimitWireModels.swift */,
 				B0000000000000000000000C /* RefreshPolicy.swift */,
 			);
 			path = CodexLimitCore;
@@ -382,8 +388,10 @@
 				C0000000000000000000002A /* CodexSettings.swift in Core Sources */,
 				C0000000000000000000001F /* CodexLimitSnapshotStore.swift in Core Sources */,
 				C00000000000000000000020 /* DateFormatting.swift in Core Sources */,
-				C00000000000000000000021 /* LimitModels.swift in Core Sources */,
+				C0000000000000000000002B /* LimitSnapshot.swift in Core Sources */,
+				C0000000000000000000002C /* LimitSnapshotPresentation.swift in Core Sources */,
 				C00000000000000000000022 /* LimitSnapshotBuilder.swift in Core Sources */,
+				C0000000000000000000002D /* LimitWireModels.swift in Core Sources */,
 				C00000000000000000000023 /* RefreshPolicy.swift in Core Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
