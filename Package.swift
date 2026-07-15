@@ -10,8 +10,7 @@ let package = Package(
     products: [
         .library(name: "CodexLimitCore", targets: ["CodexLimitCore"]),
         .executable(name: "CodexLimitApp", targets: ["CodexLimitApp"]),
-        .executable(name: "LimitWidget", targets: ["LimitWidget"]),
-        .executable(name: "CodexLimitCoreChecks", targets: ["CodexLimitCoreChecks"])
+        .executable(name: "LimitWidget", targets: ["LimitWidget"])
     ],
     targets: [
         .target(name: "CodexLimitCore"),
@@ -21,10 +20,6 @@ let package = Package(
         ),
         .executableTarget(
             name: "LimitWidget",
-            dependencies: ["CodexLimitCore"]
-        ),
-        .executableTarget(
-            name: "CodexLimitCoreChecks",
             dependencies: ["CodexLimitCore"]
         ),
         .testTarget(

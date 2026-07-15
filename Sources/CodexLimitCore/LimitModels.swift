@@ -247,11 +247,11 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
     }
 
     public var fiveHourWindow: LimitWindowSnapshot? {
-        windows.first { $0.kind == .fiveHour }
+        windows.first { $0.id == "five-hour" }
     }
 
     public var weeklyWindow: LimitWindowSnapshot? {
-        windows.first { $0.kind == .weekly }
+        windows.first { $0.id == "weekly" }
     }
 
     public var summaryLine: String {

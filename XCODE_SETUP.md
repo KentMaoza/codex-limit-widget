@@ -45,7 +45,6 @@ Before Xcode packaging:
 ```sh
 cd "/Users/hamlet/Documents/Codex Limit Widget"
 swift test --scratch-path /tmp/codex-limit-widget-test
-swift run --scratch-path /tmp/codex-limit-widget-checks CodexLimitCoreChecks
 swift build --scratch-path /tmp/codex-limit-widget-build
 ```
 

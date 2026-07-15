@@ -27,6 +27,6 @@ New snapshot fields are optional so snapshots saved by version 0.1 remain readab
 ## Verification
 
 - A current-schema fixture must cover `prolite`, named limits, string credit balance, and current settings.
-- The dedicated `CodexLimitCoreChecks` executable and Swift tests must pass.
+- The Swift tests must pass.
 - The Xcode app/widget scheme must build.
 - The built app must launch and write a live mirrored snapshot containing current base limits, named limits, credit balance, model, and reasoning effort.

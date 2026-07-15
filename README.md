@@ -51,7 +51,6 @@ Run the checks:
 
 ```sh
 swift test --scratch-path /tmp/codex-limit-widget-test
-swift run --scratch-path /tmp/codex-limit-widget-checks CodexLimitCoreChecks
 swift build --scratch-path /tmp/codex-limit-widget-build
 ```
 

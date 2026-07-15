@@ -64,8 +64,32 @@ public enum LimitSnapshotBuilder {
         idPrefix: String?,
         titlePrefix: String?
     ) -> LimitWindowSnapshot {
-        let seconds = window.limitWindowSeconds ?? 0
-        if fallbackID == "primary" || (14_400...21_600).contains(seconds) {
+        if let seconds = window.limitWindowSeconds {
+            if (14_400...21_600).contains(seconds) {
+                return snapshot(
+                    id: prefixed("five-hour", with: idPrefix),
+                    kind: .fiveHour,
+                    title: titled("5h", fallback: "5h limit", prefix: titlePrefix),
+                    window: window
+                )
+            }
+            if (518_400...864_000).contains(seconds) {
+                return snapshot(
+                    id: prefixed("weekly", with: idPrefix),
+                    kind: .weekly,
+                    title: titled("Weekly", fallback: "Weekly limit", prefix: titlePrefix),
+                    window: window
+                )
+            }
+            let fallbackTitle = windowTitle(seconds: seconds)
+            return snapshot(
+                id: prefixed(fallbackID, with: idPrefix),
+                kind: .generic,
+                title: titled(fallbackTitle, fallback: fallbackTitle, prefix: titlePrefix),
+                window: window
+            )
+        }
+        if fallbackID == "primary" {
             return snapshot(
                 id: prefixed("five-hour", with: idPrefix),
                 kind: .fiveHour,
@@ -73,7 +97,7 @@ public enum LimitSnapshotBuilder {
                 window: window
             )
         }
-        if fallbackID == "secondary" || (518_400...864_000).contains(seconds) {
+        if fallbackID == "secondary" {
             return snapshot(
                 id: prefixed("weekly", with: idPrefix),
                 kind: .weekly,
@@ -81,7 +105,7 @@ public enum LimitSnapshotBuilder {
                 window: window
             )
         }
-        let fallbackTitle = windowTitle(seconds: seconds)
+        let fallbackTitle = "Limit"
         return snapshot(
             id: prefixed(fallbackID, with: idPrefix),
             kind: .generic,
@@ -113,6 +137,9 @@ public enum LimitSnapshotBuilder {
         }
         if planType.caseInsensitiveCompare("prolite") == .orderedSame {
             return "Pro Lite"
+        }
+        if planType.caseInsensitiveCompare("chatgpt_pro") == .orderedSame {
+            return "ChatGPT Pro"
         }
         return planType
             .split(separator: "_")
