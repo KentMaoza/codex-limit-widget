@@ -27,7 +27,7 @@ case "$HOST_ARCH" in
     ;;
 esac
 
-"$ROOT_DIR/script/build_and_run.sh" build
+"$ROOT_DIR/script/build_and_run.sh" build >&2
 
 [[ -d "$APP_BUNDLE" ]] || fail "Debug app bundle was not built"
 [[ "$(lipo -archs "$APP_BINARY")" == "$HOST_ARCH" ]] \
