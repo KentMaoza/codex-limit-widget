@@ -8,6 +8,14 @@ public struct CodexLimitSnapshotStore: Sendable {
 
     public let fileURL: URL
 
+    public static var runtimeDefault: CodexLimitSnapshotStore {
+        #if DEBUG
+        CodexLimitSnapshotStore(fileURL: localWidgetContainerFileURL())
+        #else
+        CodexLimitSnapshotStore()
+        #endif
+    }
+
     public init(fileURL: URL? = nil, appGroupIdentifier: String = Self.appGroupIdentifier) {
         self.fileURL = fileURL ?? Self.defaultFileURL(appGroupIdentifier: appGroupIdentifier)
     }

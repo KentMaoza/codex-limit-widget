@@ -57,7 +57,7 @@ final class LimitStore: ObservableObject {
 
     init(
         service: CodexLimitService = CodexLimitService(),
-        snapshotStore: CodexLimitSnapshotStore = CodexLimitSnapshotStore()
+        snapshotStore: CodexLimitSnapshotStore = .runtimeDefault
     ) {
         self.service = service
         self.snapshotStore = snapshotStore
@@ -90,10 +90,19 @@ final class LimitStore: ObservableObject {
                 return
             }
 
+            let clock = ContinuousClock()
             while !Task.isCancelled {
-                await self.refresh()
+                let startedAt = clock.now
+                let minimumDelay = await self.performRefresh()
+                let duration = startedAt.duration(to: clock.now).components
+                let elapsed = TimeInterval(duration.seconds)
+                    + TimeInterval(duration.attoseconds) / 1_000_000_000_000_000_000
+                let delay = CodexLimitRefreshPolicy.delayUntilNextStart(
+                    elapsed: elapsed,
+                    minimumDelay: minimumDelay
+                )
                 do {
-                    try await Task.sleep(for: .seconds(CodexLimitRefreshPolicy.refreshIntervalSeconds))
+                    try await Task.sleep(for: .seconds(delay))
                 } catch {
                     return
                 }
@@ -102,8 +111,12 @@ final class LimitStore: ObservableObject {
     }
 
     func refresh() async {
+        _ = await performRefresh()
+    }
+
+    private func performRefresh() async -> TimeInterval {
         guard !isRefreshing else {
-            return
+            return CodexLimitRefreshPolicy.refreshInterval
         }
 
         isRefreshing = true
@@ -111,35 +124,44 @@ final class LimitStore: ObservableObject {
             isRefreshing = false
         }
 
-        var nextSnapshot = await service.loadSnapshot()
-        var messages = [nextSnapshot.errorMessage].compactMap { $0 }
-
+        let result: LimitRefreshResult
         do {
-            try snapshotStore.save(nextSnapshot)
+            result = try await service.refresh(previous: snapshot)
+            try Task.checkCancellation()
+        } catch is CancellationError {
+            return CodexLimitRefreshPolicy.refreshInterval
         } catch {
-            messages.append("Could not save widget snapshot: \(error.localizedDescription)")
+            return CodexLimitRefreshPolicy.refreshInterval
         }
 
         do {
-            try CodexLimitSnapshotStore(fileURL: CodexLimitSnapshotStore.localWidgetContainerFileURL()).save(nextSnapshot)
+            try snapshotStore.save(result.snapshot)
         } catch {
-            messages.append("Could not update local widget mirror: \(error.localizedDescription)")
-        }
-
-        if !messages.isEmpty {
-            nextSnapshot = LimitSnapshot(
-                generatedAt: nextSnapshot.generatedAt,
-                planLabel: nextSnapshot.planLabel,
-                availableResetCount: nextSnapshot.availableResetCount,
-                creditBalance: nextSnapshot.creditBalance,
-                activeModel: nextSnapshot.activeModel,
-                reasoningEffort: nextSnapshot.reasoningEffort,
-                windows: nextSnapshot.windows,
-                errorMessage: messages.joined(separator: " ")
+            guard !Task.isCancelled else {
+                return result.nextAllowedRefreshDelay
+            }
+            let saveMessage = "Could not save widget snapshot: \(error.localizedDescription)"
+            snapshot = LimitSnapshot(
+                generatedAt: result.snapshot.generatedAt,
+                lastAttemptAt: result.snapshot.lastAttemptAt,
+                planLabel: result.snapshot.planLabel,
+                availableResetCount: result.snapshot.availableResetCount,
+                creditBalance: result.snapshot.creditBalance,
+                activeModel: result.snapshot.activeModel,
+                reasoningEffort: result.snapshot.reasoningEffort,
+                windows: result.snapshot.windows,
+                errorMessage: [result.snapshot.errorMessage, saveMessage]
+                    .compactMap { $0 }
+                    .joined(separator: " ")
             )
+            return result.nextAllowedRefreshDelay
         }
 
+        guard !Task.isCancelled else {
+            return result.nextAllowedRefreshDelay
+        }
         WidgetCenter.shared.reloadAllTimelines()
-        snapshot = nextSnapshot
+        snapshot = result.snapshot
+        return result.nextAllowedRefreshDelay
     }
 }

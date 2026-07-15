@@ -148,6 +148,7 @@ public struct LimitWindowSnapshot: Codable, Equatable, Identifiable, Sendable {
 
 public struct LimitSnapshot: Codable, Equatable, Sendable {
     public let generatedAt: Date
+    public let lastAttemptAt: Date?
     public let planLabel: String
     public let availableResetCount: Int
     public let creditBalance: String?
@@ -158,6 +159,7 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
 
     public init(
         generatedAt: Date,
+        lastAttemptAt: Date? = nil,
         planLabel: String,
         availableResetCount: Int,
         creditBalance: String? = nil,
@@ -167,6 +169,7 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         errorMessage: String?
     ) {
         self.generatedAt = generatedAt
+        self.lastAttemptAt = lastAttemptAt
         self.planLabel = planLabel
         self.availableResetCount = availableResetCount
         self.creditBalance = creditBalance
@@ -174,6 +177,31 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         self.reasoningEffort = reasoningEffort
         self.windows = windows
         self.errorMessage = errorMessage
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case generatedAt
+        case lastAttemptAt
+        case planLabel
+        case availableResetCount
+        case creditBalance
+        case activeModel
+        case reasoningEffort
+        case windows
+        case errorMessage
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        generatedAt = try container.decode(Date.self, forKey: .generatedAt)
+        lastAttemptAt = try container.decodeIfPresent(Date.self, forKey: .lastAttemptAt)
+        planLabel = try container.decode(String.self, forKey: .planLabel)
+        availableResetCount = try container.decode(Int.self, forKey: .availableResetCount)
+        creditBalance = try container.decodeIfPresent(String.self, forKey: .creditBalance)
+        activeModel = try container.decodeIfPresent(String.self, forKey: .activeModel)
+        reasoningEffort = try container.decodeIfPresent(String.self, forKey: .reasoningEffort)
+        windows = try container.decode([LimitWindowSnapshot].self, forKey: .windows)
+        errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
     }
 
     public static let placeholder = LimitSnapshot(

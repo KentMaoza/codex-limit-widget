@@ -23,6 +23,7 @@ public enum LimitSnapshotBuilder {
 
         return LimitSnapshot(
             generatedAt: now,
+            lastAttemptAt: now,
             planLabel: planLabel(from: usage?.planType),
             availableResetCount: resetCount,
             creditBalance: usage?.credits?.balance,

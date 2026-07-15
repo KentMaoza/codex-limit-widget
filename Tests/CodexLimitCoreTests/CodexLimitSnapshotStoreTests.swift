@@ -44,4 +44,13 @@ final class CodexLimitSnapshotStoreTests: XCTestCase {
             "/tmp/codex-limit-home/Library/Containers/com.hamlet.CodexLimitWidget.LimitWidget/Data/Library/Application Support/Codex Limit Widget/limit-snapshot.json"
         )
     }
+
+    #if DEBUG
+    func testRuntimeDefaultUsesWidgetMirrorInDebugBuilds() {
+        XCTAssertEqual(
+            CodexLimitSnapshotStore.runtimeDefault.fileURL,
+            CodexLimitSnapshotStore.localWidgetContainerFileURL()
+        )
+    }
+    #endif
 }
