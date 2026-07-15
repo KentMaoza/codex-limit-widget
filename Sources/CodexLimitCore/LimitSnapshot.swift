@@ -122,13 +122,14 @@ public struct LimitSnapshot: Codable, Equatable, Sendable {
         lastAttemptAt = try container.decodeIfPresent(Date.self, forKey: .lastAttemptAt)
         planLabel = try container.decode(String.self, forKey: .planLabel)
         availableResetCount = try container.decode(Int.self, forKey: .availableResetCount)
+        let decodedErrorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
         isResetCountAvailable = try container.decodeIfPresent(Bool.self, forKey: .isResetCountAvailable)
-            ?? (generatedAt.timeIntervalSince1970 > 0)
+            ?? (availableResetCount > 0 || (generatedAt.timeIntervalSince1970 > 0 && decodedErrorMessage == nil))
         creditBalance = try container.decodeIfPresent(String.self, forKey: .creditBalance)
         activeModel = try container.decodeIfPresent(String.self, forKey: .activeModel)
         reasoningEffort = try container.decodeIfPresent(String.self, forKey: .reasoningEffort)
         windows = try container.decode([LimitWindowSnapshot].self, forKey: .windows)
-        errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage)
+        errorMessage = decodedErrorMessage
     }
 
     public static let placeholder = LimitSnapshot(

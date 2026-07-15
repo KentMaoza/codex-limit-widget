@@ -60,6 +60,24 @@ final class LimitSnapshotStateTests: XCTestCase {
           "errorMessage": null
         }
         """)
+        let legacyPartialFailureZero = try decode("""
+        {
+          "generatedAt": 100,
+          "planLabel": "Codex",
+          "availableResetCount": 0,
+          "windows": [],
+          "errorMessage": "Reset data unavailable"
+        }
+        """)
+        let legacyPartialFailurePositive = try decode("""
+        {
+          "generatedAt": 100,
+          "planLabel": "Codex",
+          "availableResetCount": 2,
+          "windows": [],
+          "errorMessage": "Reset data unavailable"
+        }
+        """)
         let legacyNotChecked = try decode("""
         {
           "generatedAt": -978307200,
@@ -75,6 +93,10 @@ final class LimitSnapshotStateTests: XCTestCase {
         XCTAssertEqual(try roundTrip(knownZero).balanceValue, "0")
         XCTAssertEqual(try roundTrip(unavailable).balanceValue, "—")
         XCTAssertEqual(legacySuccessfulZero.balanceValue, "0")
+        XCTAssertEqual(legacySuccessfulZero.compactBalance, "0R")
+        XCTAssertEqual(legacyPartialFailureZero.balanceValue, "—")
+        XCTAssertEqual(legacyPartialFailureZero.compactBalance, "—")
+        XCTAssertEqual(legacyPartialFailurePositive.balanceValue, "2")
         XCTAssertEqual(legacyNotChecked.balanceValue, "—")
     }
 
