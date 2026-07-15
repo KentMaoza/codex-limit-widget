@@ -5,7 +5,8 @@ import XCTest
 final class CodexLimitServiceTests: XCTestCase {
     func testUsageAndResetRequestsOverlapAndRecoveryRebuildsSnapshot() async throws {
         let fixture = try makeFixture(config: "model = \"gpt-5.6-sol\"\n")
-        let gate = OverlapGate(requiredArrivals: 2)
+        let allRequestsStarted = expectation(description: "Both requests started")
+        let gate = OverlapGate(requiredArrivals: 2, expectation: allRequestsStarted)
         ServiceURLProtocol.install { request in
             try Self.successResponse(for: request, gate: gate)
         }
@@ -14,9 +15,12 @@ final class CodexLimitServiceTests: XCTestCase {
         let service = makeService(home: fixture)
 
         async let refreshResult = service.refresh(previous: previous, now: now)
-        await gate.waitForAllArrivals()
-        let arrivalCount = await gate.arrivalCount
-        await gate.releaseAll()
+        defer {
+            gate.releaseAll()
+        }
+        await fulfillment(of: [allRequestsStarted], timeout: 1)
+        let arrivalCount = gate.arrivalCount
+        gate.releaseAll()
         let result = try await refreshResult
 
         XCTAssertEqual(arrivalCount, 2)
@@ -289,39 +293,52 @@ private struct ServiceStubResponse: @unchecked Sendable {
     let gate: OverlapGate?
 }
 
-private actor OverlapGate {
+private final class OverlapGate: @unchecked Sendable {
+    private let lock = NSLock()
     private let requiredArrivals: Int
+    private let expectation: XCTestExpectation
     private var deliveries: [@Sendable () -> Void] = []
-    private var arrivalWaiter: CheckedContinuation<Void, Never>?
+    private var totalArrivals = 0
+    private var isReleased = false
+    private var fulfilledExpectation = false
 
-    init(requiredArrivals: Int) {
+    init(requiredArrivals: Int, expectation: XCTestExpectation) {
         self.requiredArrivals = requiredArrivals
+        self.expectation = expectation
     }
 
     var arrivalCount: Int {
-        deliveries.count
+        lock.withLock { totalArrivals }
     }
 
     func enqueue(_ delivery: @escaping @Sendable () -> Void) {
-        deliveries.append(delivery)
-        if deliveries.count >= requiredArrivals {
-            arrivalWaiter?.resume()
-            arrivalWaiter = nil
+        let actions = lock.withLock { () -> (fulfill: Bool, deliverNow: Bool) in
+            totalArrivals += 1
+            let shouldFulfill = !fulfilledExpectation && totalArrivals >= requiredArrivals
+            if shouldFulfill {
+                fulfilledExpectation = true
+            }
+            if !isReleased {
+                deliveries.append(delivery)
+            }
+            return (shouldFulfill, isReleased)
         }
-    }
-
-    func waitForAllArrivals() async {
-        guard deliveries.count < requiredArrivals else {
-            return
+        if actions.fulfill {
+            expectation.fulfill()
         }
-        await withCheckedContinuation { continuation in
-            arrivalWaiter = continuation
+        if actions.deliverNow {
+            delivery()
         }
     }
 
     func releaseAll() {
-        let pendingDeliveries = deliveries
-        deliveries.removeAll()
+        let pendingDeliveries = lock.withLock { () -> [@Sendable () -> Void] in
+            isReleased = true
+            defer {
+                deliveries.removeAll()
+            }
+            return deliveries
+        }
         for delivery in pendingDeliveries {
             delivery()
         }
@@ -383,9 +400,7 @@ private final class ServiceURLProtocol: URLProtocol, @unchecked Sendable {
                 client?.urlProtocolDidFinishLoading(self)
             }
             if let gate = stub.gate {
-                Task {
-                    await gate.enqueue(deliver)
-                }
+                gate.enqueue(deliver)
             } else {
                 DispatchQueue.global().asyncAfter(deadline: .now() + stub.delay, execute: deliver)
             }
