@@ -88,6 +88,9 @@ public struct CodexLimitClient: Sendable {
             if httpResponse.statusCode == 429 {
                 let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After")
                     .flatMap(TimeInterval.init)
+                    .flatMap { value in
+                        value.isFinite && value >= 0 ? value : nil
+                    }
                 throw CodexLimitError.rateLimited(retryAfter)
             }
             throw CodexLimitError.httpStatus(httpResponse.statusCode)
@@ -97,7 +100,7 @@ public struct CodexLimitClient: Sendable {
         }
         if let contentType = httpResponse.value(forHTTPHeaderField: "Content-Type"),
            !contentType.localizedCaseInsensitiveContains("json") {
-            throw CodexLimitError.unexpectedContentType(contentType)
+            throw CodexLimitError.unexpectedContentType
         }
 
         let decoder = JSONDecoder()
@@ -156,7 +159,7 @@ public enum CodexLimitError: LocalizedError, Equatable, Sendable {
     case transportFailure
     case invalidResponse
     case emptyResponse
-    case unexpectedContentType(String)
+    case unexpectedContentType
     case invalidJSON
     case rateLimited(TimeInterval?)
     case httpStatus(Int)
@@ -175,8 +178,8 @@ public enum CodexLimitError: LocalizedError, Equatable, Sendable {
             return "The Codex endpoint returned an invalid response."
         case .emptyResponse:
             return "The Codex endpoint returned an empty response."
-        case let .unexpectedContentType(contentType):
-            return "The Codex endpoint returned \(contentType) instead of JSON."
+        case .unexpectedContentType:
+            return "The Codex endpoint returned an unexpected content type."
         case .invalidJSON:
             return "The Codex endpoint returned invalid JSON."
         case let .rateLimited(retryAfter):

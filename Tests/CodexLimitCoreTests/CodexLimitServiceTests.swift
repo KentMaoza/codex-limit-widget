@@ -5,18 +5,21 @@ import XCTest
 final class CodexLimitServiceTests: XCTestCase {
     func testUsageAndResetRequestsOverlapAndRecoveryRebuildsSnapshot() async throws {
         let fixture = try makeFixture(config: "model = \"gpt-5.6-sol\"\n")
-        let starts = LockedDates()
+        let gate = OverlapGate(requiredArrivals: 2)
         ServiceURLProtocol.install { request in
-            starts.append(Date())
-            return try Self.successResponse(for: request, delay: 0.2)
+            try Self.successResponse(for: request, gate: gate)
         }
         let previous = previousSnapshot(errorMessage: "Old failure")
         let now = Date(timeIntervalSince1970: 1_900_000_000)
+        let service = makeService(home: fixture)
 
-        let result = try await makeService(home: fixture).refresh(previous: previous, now: now)
+        async let refreshResult = service.refresh(previous: previous, now: now)
+        await gate.waitForAllArrivals()
+        let arrivalCount = await gate.arrivalCount
+        await gate.releaseAll()
+        let result = try await refreshResult
 
-        XCTAssertEqual(starts.values.count, 2)
-        XCTAssertLessThan(abs(starts.values[1].timeIntervalSince(starts.values[0])), 0.1)
+        XCTAssertEqual(arrivalCount, 2)
         XCTAssertEqual(result.snapshot.generatedAt, now)
         XCTAssertEqual(result.snapshot.lastAttemptAt, now)
         XCTAssertEqual(result.snapshot.planLabel, "ChatGPT Pro")
@@ -217,11 +220,28 @@ final class CodexLimitServiceTests: XCTestCase {
         )
     }
 
+    private static func successResponse(for request: URLRequest, gate: OverlapGate) throws -> ServiceStubResponse {
+        if request.url?.path.hasSuffix("/usage") == true {
+            return try usageResponse(
+                for: request,
+                includesResetCount: true,
+                includesBalance: false,
+                gate: gate
+            )
+        }
+        return try response(
+            for: request,
+            body: #"{"available_count":2,"credits":[]}"#,
+            gate: gate
+        )
+    }
+
     private static func usageResponse(
         for request: URLRequest,
         includesResetCount: Bool,
         includesBalance: Bool,
-        delay: TimeInterval = 0
+        delay: TimeInterval = 0,
+        gate: OverlapGate? = nil
     ) throws -> ServiceStubResponse {
         let resetCount = includesResetCount ? #", "rate_limit_reset_credits":{"available_count":1}"# : ""
         let balance = includesBalance ? #", "credits":{"balance":"12.5"}"# : ""
@@ -237,7 +257,7 @@ final class CodexLimitServiceTests: XCTestCase {
           \(resetCount)
           \(balance)
         }
-        """, delay: delay)
+        """, delay: delay, gate: gate)
     }
 
     private static func response(
@@ -245,7 +265,8 @@ final class CodexLimitServiceTests: XCTestCase {
         statusCode: Int = 200,
         headers: [String: String] = ["Content-Type": "application/json"],
         body: String = "{}",
-        delay: TimeInterval = 0
+        delay: TimeInterval = 0,
+        gate: OverlapGate? = nil
     ) throws -> ServiceStubResponse {
         ServiceStubResponse(
             response: try XCTUnwrap(HTTPURLResponse(
@@ -255,7 +276,8 @@ final class CodexLimitServiceTests: XCTestCase {
                 headerFields: headers
             )),
             data: Data(body.utf8),
-            delay: delay
+            delay: delay,
+            gate: gate
         )
     }
 }
@@ -264,6 +286,46 @@ private struct ServiceStubResponse: @unchecked Sendable {
     let response: HTTPURLResponse
     let data: Data
     let delay: TimeInterval
+    let gate: OverlapGate?
+}
+
+private actor OverlapGate {
+    private let requiredArrivals: Int
+    private var deliveries: [@Sendable () -> Void] = []
+    private var arrivalWaiter: CheckedContinuation<Void, Never>?
+
+    init(requiredArrivals: Int) {
+        self.requiredArrivals = requiredArrivals
+    }
+
+    var arrivalCount: Int {
+        deliveries.count
+    }
+
+    func enqueue(_ delivery: @escaping @Sendable () -> Void) {
+        deliveries.append(delivery)
+        if deliveries.count >= requiredArrivals {
+            arrivalWaiter?.resume()
+            arrivalWaiter = nil
+        }
+    }
+
+    func waitForAllArrivals() async {
+        guard deliveries.count < requiredArrivals else {
+            return
+        }
+        await withCheckedContinuation { continuation in
+            arrivalWaiter = continuation
+        }
+    }
+
+    func releaseAll() {
+        let pendingDeliveries = deliveries
+        deliveries.removeAll()
+        for delivery in pendingDeliveries {
+            delivery()
+        }
+    }
 }
 
 private final class LockedDates: @unchecked Sendable {
@@ -312,13 +374,20 @@ private final class ServiceURLProtocol: URLProtocol, @unchecked Sendable {
 
         do {
             let stub = try handler(request)
-            DispatchQueue.global().asyncAfter(deadline: .now() + stub.delay) { [self] in
+            let deliver: @Sendable () -> Void = { [self] in
                 guard !stateLock.withLock({ stopped }) else {
                     return
                 }
                 client?.urlProtocol(self, didReceive: stub.response, cacheStoragePolicy: .notAllowed)
                 client?.urlProtocol(self, didLoad: stub.data)
                 client?.urlProtocolDidFinishLoading(self)
+            }
+            if let gate = stub.gate {
+                Task {
+                    await gate.enqueue(deliver)
+                }
+            } else {
+                DispatchQueue.global().asyncAfter(deadline: .now() + stub.delay, execute: deliver)
             }
         } catch {
             client?.urlProtocol(self, didFailWithError: error)

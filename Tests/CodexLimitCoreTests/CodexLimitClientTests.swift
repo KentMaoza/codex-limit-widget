@@ -106,6 +106,21 @@ final class CodexLimitClientTests: XCTestCase {
         XCTAssertEqual(dateError as? CodexLimitError, .rateLimited(nil))
     }
 
+    func testRateLimitRejectsNonFiniteOverflowAndNegativeRetryAfter() async throws {
+        let fixture = try makeFixture()
+        let client = makeClient(codexHome: fixture.home)
+
+        for value in ["nan", "inf", "1e9999", "-1"] {
+            StubURLProtocol.install { request in
+                try Self.response(for: request, statusCode: 429, headers: ["Retry-After": value], body: "{}")
+            }
+
+            let error = await capturedError { try await client.fetchUsage() }
+
+            XCTAssertEqual(error as? CodexLimitError, .rateLimited(nil), "Retry-After: \(value)")
+        }
+    }
+
     func testEmptyContentTypeAndInvalidJSONErrorsAreStable() async throws {
         let fixture = try makeFixture()
         let client = makeClient(codexHome: fixture.home)
@@ -120,7 +135,7 @@ final class CodexLimitClientTests: XCTestCase {
             try Self.response(for: request, headers: ["Content-Type": "text/html"], body: "<html></html>")
         }
         let contentTypeError = await capturedError { try await client.fetchUsage() }
-        XCTAssertEqual(contentTypeError as? CodexLimitError, .unexpectedContentType("text/html"))
+        XCTAssertEqual(contentTypeError as? CodexLimitError, .unexpectedContentType)
 
         StubURLProtocol.install { request in
             try Self.response(for: request, body: "not-json")
@@ -188,6 +203,17 @@ final class CodexLimitClientTests: XCTestCase {
         let decodingError = await capturedError { try await client.fetchUsage() }
         XCTAssertEqual(decodingError as? CodexLimitError, .invalidJSON)
         XCTAssertFalse(decodingError.localizedDescription.contains(token))
+
+        StubURLProtocol.install { request in
+            try Self.response(
+                for: request,
+                headers: ["Content-Type": "text/plain; bearer=\(token)"],
+                body: "not-json"
+            )
+        }
+        let contentTypeError = await capturedError { try await client.fetchUsage() }
+        XCTAssertEqual(contentTypeError as? CodexLimitError, .unexpectedContentType)
+        XCTAssertFalse(contentTypeError.localizedDescription.contains(token))
     }
 
     private func makeClient(codexHome: URL) -> CodexLimitClient {
