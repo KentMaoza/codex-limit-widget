@@ -86,7 +86,7 @@ struct WidgetMeter: View {
     var showsReset = false
 
     private var presentation: WidgetMeterPresentation {
-        WidgetMeterPresentation(title: title, window: window)
+        WidgetMeterPresentation(window: window)
     }
 
     var body: some View {

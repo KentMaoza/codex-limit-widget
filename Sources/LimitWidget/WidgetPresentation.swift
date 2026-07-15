@@ -73,7 +73,6 @@ struct WidgetStatusPresentation {
 }
 
 struct WidgetMeterPresentation {
-    let title: String
     let window: LimitWindowSnapshot?
 
     var percentText: String {
