@@ -13,6 +13,11 @@
 		C0000000000000000000002E /* AppStatusComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000019 /* AppStatusComponents.swift */; };
 		C0000000000000000000002F /* LimitWindowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* LimitWindowCard.swift */; };
 		C0000000000000000000000D /* LimitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000D /* LimitWidget.swift */; };
+		C00000000000000000000030 /* LargeLimitWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001B /* LargeLimitWidgetView.swift */; };
+		C00000000000000000000031 /* MediumLimitWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001C /* MediumLimitWidgetView.swift */; };
+		C00000000000000000000032 /* SmallLimitWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001D /* SmallLimitWidgetView.swift */; };
+		C00000000000000000000033 /* WidgetComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001E /* WidgetComponents.swift */; };
+		C00000000000000000000034 /* WidgetPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001F /* WidgetPresentation.swift */; };
 		C00000000000000000000017 /* LimitWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A0000000000000000000001C /* LimitWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C00000000000000000000018 /* CodexLimitCore.framework in App Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* CodexLimitCore.framework */; };
 		C00000000000000000000019 /* CodexLimitCore.framework in Widget Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* CodexLimitCore.framework */; };
@@ -104,6 +109,11 @@
 		B0000000000000000000000B /* LimitSnapshotBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitSnapshotBuilder.swift; sourceTree = "<group>"; };
 		B0000000000000000000000C /* RefreshPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshPolicy.swift; sourceTree = "<group>"; };
 		B0000000000000000000000D /* LimitWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitWidget.swift; sourceTree = "<group>"; };
+		B0000000000000000000001B /* LargeLimitWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeLimitWidgetView.swift; sourceTree = "<group>"; };
+		B0000000000000000000001C /* MediumLimitWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumLimitWidgetView.swift; sourceTree = "<group>"; };
+		B0000000000000000000001D /* SmallLimitWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallLimitWidgetView.swift; sourceTree = "<group>"; };
+		B0000000000000000000001E /* WidgetComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetComponents.swift; sourceTree = "<group>"; };
+		B0000000000000000000001F /* WidgetPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPresentation.swift; sourceTree = "<group>"; };
 		B0000000000000000000000E /* AppInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppInfo.plist; sourceTree = "<group>"; };
 		B0000000000000000000000F /* WidgetInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = WidgetInfo.plist; sourceTree = "<group>"; };
 		B00000000000000000000010 /* CodexLimitWidgetApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CodexLimitWidgetApp.entitlements; sourceTree = "<group>"; };
@@ -208,7 +218,12 @@
 		A00000000000000000000007 /* LimitWidget */ = {
 			isa = PBXGroup;
 			children = (
+				B0000000000000000000001B /* LargeLimitWidgetView.swift */,
 				B0000000000000000000000D /* LimitWidget.swift */,
+				B0000000000000000000001C /* MediumLimitWidgetView.swift */,
+				B0000000000000000000001D /* SmallLimitWidgetView.swift */,
+				B0000000000000000000001E /* WidgetComponents.swift */,
+				B0000000000000000000001F /* WidgetPresentation.swift */,
 			);
 			path = LimitWidget;
 			sourceTree = "<group>";
@@ -381,7 +396,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C00000000000000000000030 /* LargeLimitWidgetView.swift in Sources */,
 				C0000000000000000000000D /* LimitWidget.swift in Sources */,
+				C00000000000000000000031 /* MediumLimitWidgetView.swift in Sources */,
+				C00000000000000000000032 /* SmallLimitWidgetView.swift in Sources */,
+				C00000000000000000000033 /* WidgetComponents.swift in Sources */,
+				C00000000000000000000034 /* WidgetPresentation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
