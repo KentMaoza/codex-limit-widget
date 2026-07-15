@@ -45,6 +45,18 @@ final class CodexLimitSnapshotStoreTests: XCTestCase {
         )
     }
 
+    func testWidgetMirrorPathDoesNotRepeatSandboxContainer() {
+        let sandboxHome = URL(
+            fileURLWithPath: "/Users/test/Library/Containers/com.hamlet.CodexLimitWidget.LimitWidget/Data"
+        )
+        let mirrorURL = CodexLimitSnapshotStore.localWidgetContainerFileURL(userHome: sandboxHome)
+
+        XCTAssertEqual(
+            mirrorURL.path,
+            "/Users/test/Library/Containers/com.hamlet.CodexLimitWidget.LimitWidget/Data/Library/Application Support/Codex Limit Widget/limit-snapshot.json"
+        )
+    }
+
     #if DEBUG
     func testRuntimeDefaultUsesWidgetMirrorInDebugBuilds() {
         XCTAssertEqual(

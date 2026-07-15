@@ -41,7 +41,17 @@ public struct CodexLimitSnapshotStore: Sendable {
     public static func localWidgetContainerFileURL(
         userHome: URL = FileManager.default.homeDirectoryForCurrentUser
     ) -> URL {
-        userHome
+        let bundleContainerURL = userHome.deletingLastPathComponent()
+        let containersURL = bundleContainerURL.deletingLastPathComponent()
+        if userHome.lastPathComponent == "Data",
+           bundleContainerURL.lastPathComponent == widgetBundleIdentifier,
+           containersURL.lastPathComponent == "Containers" {
+            return userHome
+                .appending(path: "Library/Application Support/Codex Limit Widget")
+                .appending(path: fileName)
+        }
+
+        return userHome
             .appending(path: "Library/Containers")
             .appending(path: widgetBundleIdentifier)
             .appending(path: "Data/Library/Application Support/Codex Limit Widget")
