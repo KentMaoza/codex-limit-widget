@@ -53,7 +53,7 @@ struct MenuBarStatusView: View {
 
             HStack {
                 Image(systemName: store.statusSymbolName)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(statusPresentation.tint)
                     .accessibilityHidden(true)
                 Text(statusPresentation.title)
                     .font(.body.weight(.medium))
@@ -103,49 +103,22 @@ struct MenuBarStatusView: View {
     }
 
     private func menuWindowRow(_ window: LimitWindowSnapshot) -> some View {
-        HStack {
-            Image(systemName: iconName(for: window.kind))
+        let presentation = LimitWindowPresentation(window: window)
+
+        return HStack {
+            Image(systemName: presentation.iconName)
                 .foregroundStyle(.secondary)
                 .accessibilityHidden(true)
             Text(window.title)
                 .lineLimit(2)
             Spacer()
-            Text(remainingText(window.remainingPercent))
+            Text(presentation.menuRemainingText)
                 .fontWeight(.semibold)
                 .monospacedDigit()
         }
         .font(.callout)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(window.title) usage window")
-        .accessibilityValue(windowAccessibilityValue(window))
-    }
-
-    private func remainingText(_ value: Int?) -> String {
-        value.map { "\($0)% remaining" } ?? "— remaining"
-    }
-
-    private func iconName(for kind: LimitWindowKind) -> String {
-        switch kind {
-        case .fiveHour:
-            return "clock"
-        case .weekly:
-            return "calendar"
-        case .generic:
-            return "gauge"
-        }
-    }
-
-    private func windowAccessibilityValue(_ window: LimitWindowSnapshot) -> String {
-        let remaining = window.remainingPercent.map { "\($0)% remaining" } ?? "remaining unavailable"
-        let used = window.usedPercent.map { "\($0)% used" } ?? "used unavailable"
-        let reset: String
-        if let resetDate = window.resetDate {
-            reset = "resets \(CodexLimitDateFormatting.resetTime(resetDate))"
-        } else if let resetAfterSeconds = window.resetAfterSeconds {
-            reset = "resets in \(CodexLimitDateFormatting.duration(seconds: resetAfterSeconds))"
-        } else {
-            reset = "reset unavailable"
-        }
-        return "\(remaining), \(used), \(reset)"
+        .accessibilityValue(presentation.accessibilityValue)
     }
 }

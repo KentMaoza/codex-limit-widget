@@ -1,14 +1,63 @@
 import CodexLimitCore
 import SwiftUI
 
+struct LimitWindowPresentation {
+    let window: LimitWindowSnapshot
+
+    var iconName: String {
+        switch window.kind {
+        case .fiveHour:
+            return "clock"
+        case .weekly:
+            return "calendar"
+        case .generic:
+            return "gauge"
+        }
+    }
+
+    var remainingPercentText: String {
+        percentText(window.remainingPercent)
+    }
+
+    var usedPercentText: String {
+        percentText(window.usedPercent)
+    }
+
+    var menuRemainingText: String {
+        window.remainingPercent.map { "\($0)% remaining" } ?? "— remaining"
+    }
+
+    var accessibilityValue: String {
+        let remaining = window.remainingPercent.map { "\($0)% remaining" } ?? "remaining unavailable"
+        let used = window.usedPercent.map { "\($0)% used" } ?? "used unavailable"
+        let reset: String
+        if let resetDate = window.resetDate {
+            reset = "resets \(CodexLimitDateFormatting.resetTime(resetDate))"
+        } else if let resetAfterSeconds = window.resetAfterSeconds {
+            reset = "resets in \(CodexLimitDateFormatting.duration(seconds: resetAfterSeconds))"
+        } else {
+            reset = "reset unavailable"
+        }
+        return "\(remaining), \(used), \(reset)"
+    }
+
+    private func percentText(_ value: Int?) -> String {
+        value.map { "\($0)%" } ?? "—"
+    }
+}
+
 struct LimitWindowCard: View {
     let window: LimitWindowSnapshot
+
+    private var presentation: LimitWindowPresentation {
+        LimitWindowPresentation(window: window)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 11) {
             HStack(alignment: .top) {
                 HStack(spacing: 6) {
-                    Image(systemName: iconName)
+                    Image(systemName: presentation.iconName)
                         .accessibilityHidden(true)
                     Text(window.title)
                 }
@@ -17,7 +66,7 @@ struct LimitWindowCard: View {
 
                 Spacer()
 
-                Text(percentText(window.remainingPercent))
+                Text(presentation.remainingPercentText)
                     .font(.system(size: 25, weight: .bold, design: .rounded))
                     .monospacedDigit()
             }
@@ -27,7 +76,7 @@ struct LimitWindowCard: View {
             Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 4) {
                 GridRow {
                     Text("Used").foregroundStyle(.secondary)
-                    Text(percentText(window.usedPercent)).monospacedDigit()
+                    Text(presentation.usedPercentText).monospacedDigit()
                 }
                 GridRow {
                     Text("Resets").foregroundStyle(.secondary)
@@ -50,7 +99,7 @@ struct LimitWindowCard: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(window.title) usage window")
-        .accessibilityValue(accessibilityValue)
+        .accessibilityValue(presentation.accessibilityValue)
     }
 
     @ViewBuilder
@@ -78,31 +127,6 @@ struct LimitWindowCard: View {
         }
     }
 
-    private var iconName: String {
-        switch window.kind {
-        case .fiveHour:
-            return "clock"
-        case .weekly:
-            return "calendar"
-        case .generic:
-            return "gauge"
-        }
-    }
-
-    private var accessibilityValue: String {
-        let remaining = window.remainingPercent.map { "\($0)% remaining" } ?? "remaining unavailable"
-        let used = window.usedPercent.map { "\($0)% used" } ?? "used unavailable"
-        let reset: String
-        if let resetDate = window.resetDate {
-            reset = "resets \(CodexLimitDateFormatting.resetTime(resetDate))"
-        } else if let resetAfterSeconds = window.resetAfterSeconds {
-            reset = "resets in \(CodexLimitDateFormatting.duration(seconds: resetAfterSeconds))"
-        } else {
-            reset = "reset unavailable"
-        }
-        return "\(remaining), \(used), \(reset)"
-    }
-
     private func tint(for remaining: Int) -> Color {
         if remaining <= 15 {
             return .red
@@ -111,9 +135,5 @@ struct LimitWindowCard: View {
             return .orange
         }
         return .green
-    }
-
-    private func percentText(_ value: Int?) -> String {
-        value.map { "\($0)%" } ?? "—"
     }
 }
