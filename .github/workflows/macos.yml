@@ -1,0 +1,59 @@
+name: macOS
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SwiftPM tests
+        run: swift test --scratch-path /tmp/codex-limit-widget-ci-test
+
+      - name: SwiftPM build
+        run: swift build --scratch-path /tmp/codex-limit-widget-ci-build
+
+      - name: Unsigned Xcode Debug build
+        run: |
+          xcodebuild \
+            -project "Codex Limit Widget.xcodeproj" \
+            -scheme "Codex Limit Widget" \
+            -configuration Debug \
+            -derivedDataPath /tmp/codex-limit-widget-ci-debug \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Unsigned universal Xcode Release build
+        run: |
+          xcodebuild \
+            -project "Codex Limit Widget.xcodeproj" \
+            -scheme "Codex Limit Widget" \
+            -configuration Release \
+            -derivedDataPath /tmp/codex-limit-widget-ci-release \
+            ARCHS='arm64 x86_64' \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Verify universal Release binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          products="/tmp/codex-limit-widget-ci-release/Build/Products/Release"
+          app="$products/Codex Limit Widget.app"
+          binaries=(
+            "$app/Contents/MacOS/Codex Limit Widget"
+            "$app/Contents/Frameworks/CodexLimitCore.framework/Versions/A/CodexLimitCore"
+            "$app/Contents/PlugIns/LimitWidget.appex/Contents/MacOS/LimitWidget"
+          )
+
+          for binary in "${binaries[@]}"; do
+            architectures="$(lipo -archs "$binary")"
+            [[ " $architectures " == *" arm64 "* ]]
+            [[ " $architectures " == *" x86_64 "* ]]
+          done

@@ -8,15 +8,16 @@ It reads your existing Codex Desktop login from `~/.codex/auth.json`, checks the
 
 ## Install
 
-The easiest path is the prebuilt zip from GitHub Releases.
+> **Warning:** GitHub release v0.1.0 is broken and outdated after extraction. Do not use it or its prebuilt zip.
 
-1. Download `Codex-Limit-Widget.zip` from the latest release.
-2. Unzip it.
-3. Move `Codex Limit Widget.app` into `/Applications`.
-4. Open the app once.
-5. Keep Codex Desktop installed and logged in on the same Mac.
+Install from source instead:
 
-This preview build is not notarized. If macOS blocks it, Control-click the app, choose Open, then choose Open again in the confirmation dialog.
+1. Clone this repository and open a terminal at the project root.
+2. Install Xcode with the macOS development tools.
+3. Keep Codex Desktop installed and logged in on the same Mac.
+4. Run `./script/build_and_run.sh run`.
+
+The local Debug build is ad-hoc signed for this Mac. It is not Developer ID signed or notarized, and it is only for local use.
 
 ## Add the widget
 
@@ -60,14 +61,29 @@ Build the app and widget:
 xcodebuild -project "Codex Limit Widget.xcodeproj" -scheme "Codex Limit Widget" -configuration Debug -derivedDataPath /tmp/codex-limit-widget-derived build
 ```
 
-Or use the project run entrypoint, which builds and launches the app:
+The local build tool supports five modes:
 
 ```sh
-./script/build_and_run.sh
-./script/build_and_run.sh --verify
+./script/build_and_run.sh build
+./script/build_and_run.sh run
+./script/build_and_run.sh debug
+./script/build_and_run.sh logs
+./script/build_and_run.sh smoke
 ```
 
-The Debug build is intended for local use on your own Mac. Release distribution still needs an Apple signing team, provisioning profiles, and notarization.
+- `build` compiles without stopping or launching the app.
+- `run` builds and launches the app.
+- `debug` builds and starts the app in LLDB.
+- `logs` builds, launches, and streams app logs.
+- `smoke` builds, launches, and verifies a fresh sanitized widget snapshot without printing it.
+
+Create a local preview zip with:
+
+```sh
+./script/package_local_preview.sh
+```
+
+The archive is written under `dist/` as `Codex-Limit-Widget-0.2.0-<architecture>-local-preview.zip`. It contains only the host architecture, uses an ad-hoc local signature rather than a distribution signature, is not notarized, and is for local use only. Release distribution still requires an Apple signing team, provisioning profiles, Developer ID signing, and notarization.
 
 ## Troubleshooting
 
