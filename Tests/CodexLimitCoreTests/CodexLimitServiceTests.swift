@@ -32,6 +32,7 @@ final class CodexLimitServiceTests: XCTestCase {
         XCTAssertEqual(result.snapshot.activeModel, "gpt-5.6-sol")
         XCTAssertNil(result.snapshot.errorMessage)
         XCTAssertEqual(result.nextAllowedRefreshDelay, 60)
+        XCTAssertNil(result.retryAfterDelay)
     }
 
     func testCancellationPropagatesInsteadOfCreatingErrorSnapshot() async throws {
@@ -82,6 +83,7 @@ final class CodexLimitServiceTests: XCTestCase {
         XCTAssertEqual(result.snapshot.windows, previous.windows)
         XCTAssertEqual(result.snapshot.errorMessage, "The Codex endpoint returned HTTP 500.")
         XCTAssertEqual(result.nextAllowedRefreshDelay, 60)
+        XCTAssertNil(result.retryAfterDelay)
     }
 
     func testDistinctFailuresArePreservedAndGreatestRetryAfterWins() async throws {
@@ -100,6 +102,7 @@ final class CodexLimitServiceTests: XCTestCase {
             "Codex rate-limited this check. Try again after 90 seconds. Codex rate-limited this check. Try again after 120 seconds."
         )
         XCTAssertEqual(result.nextAllowedRefreshDelay, 120)
+        XCTAssertEqual(result.retryAfterDelay, 120)
     }
 
     func testInitialUsageFailureRetainsNotCheckedDataAndRecordsAttempt() async throws {

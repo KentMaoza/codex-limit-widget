@@ -3,6 +3,7 @@ import Foundation
 public struct LimitRefreshResult: Equatable, Sendable {
     public let snapshot: LimitSnapshot
     public let nextAllowedRefreshDelay: TimeInterval
+    public let retryAfterDelay: TimeInterval?
 }
 
 public struct CodexLimitService: Sendable {
@@ -24,9 +25,11 @@ public struct CodexLimitService: Sendable {
         try Task.checkCancellation()
 
         let failures = [usage.failure, resetCredits.failure].compactMap { $0 }
-        let nextDelay = failures
-            .compactMap(\.retryAfter)
-            .reduce(CodexLimitRefreshPolicy.refreshInterval, max)
+        let retryAfterDelay = failures.compactMap(\.retryAfter).max()
+        let nextDelay = max(
+            CodexLimitRefreshPolicy.refreshInterval,
+            retryAfterDelay ?? 0
+        )
 
         let snapshot: LimitSnapshot
         switch usage {
@@ -50,7 +53,11 @@ public struct CodexLimitService: Sendable {
             )
         }
 
-        return LimitRefreshResult(snapshot: snapshot, nextAllowedRefreshDelay: nextDelay)
+        return LimitRefreshResult(
+            snapshot: snapshot,
+            nextAllowedRefreshDelay: nextDelay,
+            retryAfterDelay: retryAfterDelay
+        )
     }
 
     private static func fetchOutcome<Value: Sendable>(

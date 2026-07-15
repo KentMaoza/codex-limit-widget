@@ -37,12 +37,16 @@ struct CodexLimitWidgetApp: App {
                     store.start()
                 }
         } label: {
+            let presentation = AppStatusPresentation(snapshot: store.snapshot)
             Label {
                 Text(store.snapshot.summaryLine)
             } icon: {
                 Image(systemName: store.statusSymbolName)
                     .accessibilityHidden(true)
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(presentation.title)
+            .accessibilityValue(presentation.menuBarAccessibilityValue)
         }
         .menuBarExtraStyle(.window)
     }
@@ -83,13 +87,13 @@ final class LimitStore: ObservableObject {
             let clock = ContinuousClock()
             while !Task.isCancelled {
                 let startedAt = clock.now
-                let minimumDelay = await self.performRefresh()
+                let result = await self.performRefresh()
                 let duration = startedAt.duration(to: clock.now).components
                 let elapsed = TimeInterval(duration.seconds)
                     + TimeInterval(duration.attoseconds) / 1_000_000_000_000_000_000
                 let delay = CodexLimitRefreshPolicy.delayUntilNextStart(
                     elapsed: elapsed,
-                    minimumDelay: minimumDelay
+                    retryAfterDelay: result?.retryAfterDelay
                 )
                 do {
                     try await Task.sleep(for: .seconds(delay))
@@ -104,9 +108,9 @@ final class LimitStore: ObservableObject {
         _ = await performRefresh()
     }
 
-    private func performRefresh() async -> TimeInterval {
+    private func performRefresh() async -> LimitRefreshResult? {
         guard !isRefreshing else {
-            return CodexLimitRefreshPolicy.refreshInterval
+            return nil
         }
 
         isRefreshing = true
@@ -119,16 +123,16 @@ final class LimitStore: ObservableObject {
             result = try await service.refresh(previous: snapshot)
             try Task.checkCancellation()
         } catch is CancellationError {
-            return CodexLimitRefreshPolicy.refreshInterval
+            return nil
         } catch {
-            return CodexLimitRefreshPolicy.refreshInterval
+            return nil
         }
 
         do {
             try snapshotStore.save(result.snapshot)
         } catch {
             guard !Task.isCancelled else {
-                return result.nextAllowedRefreshDelay
+                return result
             }
             let saveMessage = "Could not save widget snapshot: \(error.localizedDescription)"
             snapshot = LimitSnapshot(
@@ -144,14 +148,14 @@ final class LimitStore: ObservableObject {
                     .compactMap { $0 }
                     .joined(separator: " ")
             )
-            return result.nextAllowedRefreshDelay
+            return result
         }
 
         guard !Task.isCancelled else {
-            return result.nextAllowedRefreshDelay
+            return result
         }
         WidgetCenter.shared.reloadAllTimelines()
         snapshot = result.snapshot
-        return result.nextAllowedRefreshDelay
+        return result
     }
 }

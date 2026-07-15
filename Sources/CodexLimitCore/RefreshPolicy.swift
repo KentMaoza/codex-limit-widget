@@ -6,8 +6,9 @@ public enum CodexLimitRefreshPolicy {
 
     public static func delayUntilNextStart(
         elapsed: TimeInterval,
-        minimumDelay: TimeInterval
+        retryAfterDelay: TimeInterval?
     ) -> TimeInterval {
-        max(0, minimumDelay - elapsed)
+        let nominalDelay = max(0, refreshInterval - elapsed)
+        return max(nominalDelay, retryAfterDelay ?? 0)
     }
 }

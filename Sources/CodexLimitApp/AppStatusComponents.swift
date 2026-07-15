@@ -68,6 +68,10 @@ struct AppStatusPresentation {
             return "Keep an eye on the usage windows."
         }
     }
+
+    var menuBarAccessibilityValue: String {
+        "\(message) \(snapshot.summaryLine)"
+    }
 }
 
 struct AppHeaderView: View {
