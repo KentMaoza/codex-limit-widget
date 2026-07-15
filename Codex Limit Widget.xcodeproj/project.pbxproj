@@ -10,6 +10,8 @@
 		C00000000000000000000001 /* CodexLimitWidgetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000001 /* CodexLimitWidgetApp.swift */; };
 		C00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000002 /* ContentView.swift */; };
 		C00000000000000000000003 /* MenuBarStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000003 /* MenuBarStatusView.swift */; };
+		C0000000000000000000002E /* AppStatusComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = B00000000000000000000019 /* AppStatusComponents.swift */; };
+		C0000000000000000000002F /* LimitWindowCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000001A /* LimitWindowCard.swift */; };
 		C0000000000000000000000D /* LimitWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0000000000000000000000D /* LimitWidget.swift */; };
 		C00000000000000000000017 /* LimitWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A0000000000000000000001C /* LimitWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C00000000000000000000018 /* CodexLimitCore.framework in App Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000027 /* CodexLimitCore.framework */; };
@@ -91,6 +93,8 @@
 		B00000000000000000000001 /* CodexLimitWidgetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitWidgetApp.swift; sourceTree = "<group>"; };
 		B00000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B00000000000000000000003 /* MenuBarStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarStatusView.swift; sourceTree = "<group>"; };
+		B00000000000000000000019 /* AppStatusComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusComponents.swift; sourceTree = "<group>"; };
+		B0000000000000000000001A /* LimitWindowCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitWindowCard.swift; sourceTree = "<group>"; };
 		B00000000000000000000004 /* Base64URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base64URL.swift; sourceTree = "<group>"; };
 		B00000000000000000000005 /* CodexAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexAuth.swift; sourceTree = "<group>"; };
 		B00000000000000000000006 /* CodexLimitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexLimitClient.swift; sourceTree = "<group>"; };
@@ -173,8 +177,10 @@
 		A00000000000000000000005 /* CodexLimitApp */ = {
 			isa = PBXGroup;
 			children = (
+				B00000000000000000000019 /* AppStatusComponents.swift */,
 				B00000000000000000000001 /* CodexLimitWidgetApp.swift */,
 				B00000000000000000000002 /* ContentView.swift */,
+				B0000000000000000000001A /* LimitWindowCard.swift */,
 				B00000000000000000000003 /* MenuBarStatusView.swift */,
 			);
 			path = CodexLimitApp;
@@ -363,8 +369,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0000000000000000000002E /* AppStatusComponents.swift in Sources */,
 				C00000000000000000000001 /* CodexLimitWidgetApp.swift in Sources */,
 				C00000000000000000000002 /* ContentView.swift in Sources */,
+				C0000000000000000000002F /* LimitWindowCard.swift in Sources */,
 				C00000000000000000000003 /* MenuBarStatusView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

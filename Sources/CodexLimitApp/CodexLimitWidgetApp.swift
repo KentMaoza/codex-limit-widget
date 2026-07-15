@@ -27,6 +27,7 @@ struct CodexLimitWidgetApp: App {
                     }
                 }
                 .keyboardShortcut("r", modifiers: [.command])
+                .disabled(store.isRefreshing)
             }
         }
 
@@ -40,6 +41,7 @@ struct CodexLimitWidgetApp: App {
                 Text(store.snapshot.summaryLine)
             } icon: {
                 Image(systemName: store.statusSymbolName)
+                    .accessibilityHidden(true)
             }
         }
         .menuBarExtraStyle(.window)
@@ -65,19 +67,7 @@ final class LimitStore: ObservableObject {
     }
 
     var statusSymbolName: String {
-        if snapshot.isNotChecked {
-            return "clock"
-        }
-        if snapshot.errorMessage != nil, snapshot.windows.isEmpty {
-            return "exclamationmark.triangle"
-        }
-        if let weekly = snapshot.weeklyWindow?.remainingPercent, weekly <= 20 {
-            return "bolt.circle"
-        }
-        if let fiveHour = snapshot.fiveHourWindow?.remainingPercent, fiveHour <= 12 {
-            return "hourglass.circle"
-        }
-        return "gauge"
+        AppStatusPresentation(snapshot: snapshot).symbolName
     }
 
     func start() {
